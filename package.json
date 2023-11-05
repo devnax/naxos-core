@@ -1,0 +1,34 @@
+{
+  "name": "naxos-core",
+  "version": "1.2.1",
+  "description": "",
+  "keywords": [],
+  "author": "Naxrul Ahmed",
+  "license": "ISC",
+  "scripts": {
+    "tsc": "tsc --module CommonJS --outDir dist",
+    "move": "cp package.json dist/package.json && cp readme.md dist/readme.md",
+    "build": "rm -rf dist && mkdir dist && npm run move && npm run tsc && cd dist",
+    "start": "parcel example/index.html --no-cache",
+    "cng": "sudo cd dist"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.7",
+    "parcel": "^2.9.3",
+    "process": "^0.11.10",
+    "react": "^18.2.0",
+    "react-app-polyfill": "^3.0.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "is-hotkey": "^0.2.0",
+    "naxui": "^1.2.1",
+    "naxui-icons": "^1.0.5",
+    "naxui-manager": "^1.6.5",
+    "react-browser-scrollbar": "^1.1.5",
+    "state-range": "^3.1.3"
+  }
+}
