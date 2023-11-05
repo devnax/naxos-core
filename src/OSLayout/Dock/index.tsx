@@ -6,7 +6,7 @@ import { OSLayoutProps } from "..";
 import App from "../../App";
 
 
-const Dock = ({ dockPosition, appType, centerMode, dockBgcolor }: OSLayoutProps) => {
+const Dock = ({ dockPosition, appType, centerMode, dockBgcolor, logo }: OSLayoutProps) => {
     let isHorizental = dockPosition === "top" || dockPosition === "bottom"
     let apps = App.getAllByType(appType)
     let endApps = App.getAllByType(appType, true)
@@ -21,8 +21,28 @@ const Dock = ({ dockPosition, appType, centerMode, dockBgcolor }: OSLayoutProps)
             justifyContent="center"
             py={isHorizental ? 0 : 1}
             px={isHorizental ? 1 : 0}
+            header={
+                <>
+                    {!!logo && <Stack
+                        mb={1}
+                        height={isHorizental ? "100%" : "initial"}
+                        width={isHorizental ? "intial" : "100%"}
+                        alignItems="center"
+                        flexDirection={isHorizental ? "row-reverse" : "column-reverse"}
+                    >
+                        {logo}
+                    </Stack>}
+                </>
+
+            }
             footer={
-                <Stack gap={8} height="100%" alignItems="center" flexDirection={isHorizental ? "row-reverse" : "column-reverse"}>
+                <Stack
+                    gap={8}
+                    height={isHorizental ? "100%" : "initial"}
+                    width={isHorizental ? "intial" : "100%"}
+                    alignItems="center"
+                    flexDirection={isHorizental ? "row-reverse" : "column-reverse"}
+                >
                     {
                         endApps.map(app => <DockIcon key={app._id} appId={app.id} />)
                     }
@@ -38,7 +58,13 @@ const Dock = ({ dockPosition, appType, centerMode, dockBgcolor }: OSLayoutProps)
                 }
             }}
         >
-            <Stack height="100%" gap={8} alignItems="center" direction={isHorizental ? "row" : "column"}>
+            <Stack
+                gap={8}
+                height={isHorizental ? "100%" : "initial"}
+                width={isHorizental ? "intial" : "100%"}
+                alignItems="center"
+                direction={isHorizental ? "row" : "column"}
+            >
                 {
                     apps.map(app => <DockIcon key={app._id} appId={app.id} />)
                 }

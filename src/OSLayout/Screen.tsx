@@ -21,6 +21,7 @@ const Screen = ({ appType }: OSLayoutProps) => {
             height="100%"
             header={<AppHeader />}
             footer={<AppFooter />}
+            overflow="hidden"
         >
             <Render />
         </ViewBox>

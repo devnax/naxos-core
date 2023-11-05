@@ -11,6 +11,7 @@ type AppMetaProps = {
 export type ShortcutKey = {
     key: string;
     command: string;
+    data?: any
 }
 
 
@@ -26,7 +27,8 @@ export type AppProps = {
     onClick?: IconButtonProps['onClick'];
     // onClose?: () => void;
     shortcutKeys?: ShortcutKey[];
-    commands?: CommandType[]
+    commands?: CommandType[];
+    onContextMenu?: () => ReactElement;
 }
 
 export type AppPropsPrivate = AppProps & {
