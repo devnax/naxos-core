@@ -1,8 +1,8 @@
 import { ReactElement } from 'react';
 import { Store } from 'state-range'
-import { CommandType } from '../Command';
 import { IconButtonProps } from 'naxui/IconButton';
-
+import Window from './Window';
+import Screen from './Screen';
 
 type AppMetaProps = {
     runningApp: string;
@@ -10,8 +10,8 @@ type AppMetaProps = {
 
 export type ShortcutKey = {
     key: string;
-    command: string;
-    data?: any
+    listener: string;
+    props?: any
 }
 
 
@@ -22,20 +22,12 @@ export type AppProps = {
     placeButtom?: boolean;
     icon: () => ReactElement;
     render?: () => ReactElement;
-    appHeader?: () => ReactElement;
-    appFooter?: () => ReactElement;
     onClick?: IconButtonProps['onClick'];
-    // onClose?: () => void;
     shortcutKeys?: ShortcutKey[];
-    commands?: CommandType[];
     onContextMenu?: () => ReactElement;
 }
 
-export type AppPropsPrivate = AppProps & {
-    running?: boolean
-}
-
-class AppFactory extends Store<AppPropsPrivate, AppMetaProps> { }
+class AppFactory extends Store<AppProps, AppMetaProps> { }
 const factory = new AppFactory()
 
 class App {
@@ -48,8 +40,7 @@ class App {
             type: this.defaultAppType,
             placeButtom: false,
             shortcutKeys: [],
-            ...props,
-            running: false
+            ...props
         })
     }
 
@@ -60,18 +51,15 @@ class App {
     getAllByType(type: string, placeButtom = false) {
         return factory.find({ type, placeButtom })
     }
-    run(appId: string) {
-        let app = this.get(appId)
-        if (app && app.render) {
-            factory.update({ running: false }, { running: true, type: app.type })
-            factory.update({ running: true }, { id: appId })
+
+    getActiveApp(type: string) {
+        const win = Window.getActive(type)
+        if (win) {
+            const screen = Screen.getActive(win._id)
+            if (screen) {
+                return factory.findFirst({ id: screen.appId })
+            }
         }
-    }
-    closeAll(type: string) {
-        factory.update({ running: false }, { running: true, type })
-    }
-    getRunningApp(type: string) {
-        return factory.findFirst({ type, running: true })
     }
 }
 

@@ -1,0 +1,21 @@
+.resizable-divs {
+  display: flex;
+}
+
+.resizable-div {
+  position: relative;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  margin: 5px;
+  overflow: hidden;
+  flex: 1; /* Allows the divs to expand and contract equally within the flex container */
+}
+
+.resizable-div .resizer {
+  width: 10px;
+  height: 100%;
+  background-color: #000;
+  position: absolute;
+  right: 0;
+  cursor: col-resize;
+}

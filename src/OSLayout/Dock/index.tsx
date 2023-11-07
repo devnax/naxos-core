@@ -3,14 +3,13 @@ import ViewBox from "naxui/ViewBox";
 import React from "react";
 import DockIcon from "./DockIcon";
 import { OSLayoutProps } from "..";
-import App from "../../App";
+import App from "../../Handlers/App";
 
 
 const Dock = ({ dockPosition, appType, centerMode, dockBgcolor, logo }: OSLayoutProps) => {
     let isHorizental = dockPosition === "top" || dockPosition === "bottom"
     let apps = App.getAllByType(appType)
     let endApps = App.getAllByType(appType, true)
-
 
     return (
         <ViewBox
@@ -26,20 +25,19 @@ const Dock = ({ dockPosition, appType, centerMode, dockBgcolor, logo }: OSLayout
                     {!!logo && <Stack
                         mb={1}
                         height={isHorizental ? "100%" : "initial"}
-                        width={isHorizental ? "intial" : "100%"}
+                        width={isHorizental ? "initial" : "100%"}
                         alignItems="center"
                         flexDirection={isHorizental ? "row-reverse" : "column-reverse"}
                     >
                         {logo}
                     </Stack>}
                 </>
-
             }
             footer={
                 <Stack
                     gap={8}
                     height={isHorizental ? "100%" : "initial"}
-                    width={isHorizental ? "intial" : "100%"}
+                    width={isHorizental ? "initial" : "100%"}
                     alignItems="center"
                     flexDirection={isHorizental ? "row-reverse" : "column-reverse"}
                 >
@@ -61,7 +59,7 @@ const Dock = ({ dockPosition, appType, centerMode, dockBgcolor, logo }: OSLayout
             <Stack
                 gap={8}
                 height={isHorizental ? "100%" : "initial"}
-                width={isHorizental ? "intial" : "100%"}
+                width={isHorizental ? "initial" : "100%"}
                 alignItems="center"
                 direction={isHorizental ? "row" : "column"}
             >

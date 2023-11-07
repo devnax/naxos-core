@@ -1,23 +1,31 @@
 import IconButton from "naxui/IconButton";
 import React from "react";
-import App, { AppPropsPrivate } from "../../App";
+import App, { AppProps } from "../../Handlers/App";
+import Stack from "naxui/Stack";
+import { withStore } from "state-range";
+import Window, { WindowTypes } from "../../Handlers/Window";
+import Screen, { ScreenTypes } from "../../Handlers/Screen";
 
 export type DockIconProps = {
     appId: string;
 }
 
 const DockIcon = ({ appId }: DockIconProps) => {
-    const app = App.get(appId) as AppPropsPrivate
+    const app = App.get(appId) as AppProps
+    const activeWindow = Window.getActive(app.type as string) as WindowTypes
+    const activeScreen = Screen.getActive((activeWindow as any)._id as any) as ScreenTypes
+    const active = activeScreen.active && activeScreen.appId === appId
     const Icon = app.icon
+
     return (
         <IconButton
             // variant={app.running ? "filled" : "text"}
-            bgcolor={app.running ? "color.primary.soft" : "transparent"}
-            color={app.running ? "primary" : "paper"}
+            bgcolor={active ? "color.primary.soft" : "transparent"}
+            color={active ? "primary" : "paper"}
             corner="rounded"
             onClick={(e) => {
                 app.onClick && app.onClick(e)
-                App.run(appId)
+                Screen.setActiveApp(appId)
             }}
         >
             <Icon />
@@ -25,4 +33,4 @@ const DockIcon = ({ appId }: DockIconProps) => {
     )
 }
 
-export default DockIcon
+export default withStore(DockIcon)

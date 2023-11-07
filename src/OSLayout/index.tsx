@@ -1,12 +1,11 @@
-import React, { ReactElement, useEffect, useState } from "react"
+import React, { ReactElement, useEffect, useMemo, useState } from "react"
 import ViewBox from "naxui/ViewBox"
-import Menu from "naxui/Menu"
 import { useMediaScreen, useWindowResize } from "naxui-manager";
 import Dock from "./Dock";
-import App from "../App";
-import { withStore } from "state-range";
-import Screen from "./Screen";
-
+import App from "../Handlers/App";
+import { noDispatch, withStore } from "state-range";
+import WindowView from "./WindowView";
+import Window from "../Handlers/Window";
 
 export type OSLayoutProps = {
     viewMode?: "mobile" | "pc";
@@ -26,10 +25,31 @@ const OSLayout = (props: OSLayoutProps) => {
             setHeight(window.innerHeight)
         }
     })
+    let { dockPosition, appType, bgcolor, bgImage } = props
+
+    useMemo(() => {
+        noDispatch(() => {
+
+            let runningApp: any = App.getActiveApp(appType)
+            if (!runningApp) {
+                const apps = App.getAllByType(appType)
+                if (apps.length) {
+                    runningApp = apps[0]
+                }
+            }
+
+            const windows = Window.getAll(appType)
+            if (!windows.length) {
+                Window.open(appType, runningApp.id)
+            }
+
+        })
+    }, [])
+
+
+    const windows = Window.getAll(appType)
     const mediaScreen = useMediaScreen()
     const isMobile = mediaScreen.isDown("md")
-
-    let { dockPosition, appType, bgcolor, bgImage } = props
 
     dockPosition ||= isMobile ? "bottom" : "left"
 
@@ -40,15 +60,7 @@ const OSLayout = (props: OSLayoutProps) => {
     }
 
     useEffect(() => {
-        let runningApp = App.getRunningApp(appType)
-        if (!runningApp) {
-            const apps = App.getAllByType(appType)
-            if (apps.length) {
-                App.run(apps[0].id)
-            }
-        }
         return () => {
-            App.closeAll(appType)
         }
     }, [])
 
@@ -63,7 +75,7 @@ const OSLayout = (props: OSLayoutProps) => {
             onContextMenu={(e: any) => {
                 if (!["INPUT", "TEXTAREA"].includes(e.target.tagName)) {
                     // e.preventDefault()
-                    let runningApp = App.getRunningApp(appType)
+                    let runningApp = App.getActiveApp(appType)
                     if (runningApp && runningApp.onContextMenu) {
                         // open the menu
                         const view = runningApp.onContextMenu()
@@ -71,7 +83,11 @@ const OSLayout = (props: OSLayoutProps) => {
                 }
             }}
         >
-            <Screen {...props} />
+            {
+                windows.map(win => {
+                    return <WindowView key={win._id} windowId={win._id} appType={appType} />
+                })
+            }
         </ViewBox>
     )
 }
