@@ -1,7 +1,6 @@
-import IconButton from "naxui/IconButton";
 import React from "react";
+import IconButton from "naxui/IconButton";
 import App, { AppProps } from "../../Handlers/App";
-import Stack from "naxui/Stack";
 import { withStore } from "state-range";
 import Window, { WindowTypes } from "../../Handlers/Window";
 import Screen, { ScreenTypes } from "../../Handlers/Screen";

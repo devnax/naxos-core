@@ -1,5 +1,6 @@
 import { Store } from "state-range";
 import Screen from "./Screen";
+import App from "./App";
 
 export type WindowTypes = {
     appType: string;
@@ -11,14 +12,14 @@ class WindowFactory extends Store<WindowTypes> { }
 const factory = new WindowFactory
 
 class Window {
-    open(appType: string, appId: string) {
-        factory.update({ active: false }, { active: true, appType })
 
+    open(appType: string, appId: string) {
         const c = factory.insert({
             appType,
-            active: true
+            active: false
         })
         Screen.open(c._id, appId)
+        this.setActive(c._id)
         return c._id
     }
 
@@ -26,21 +27,21 @@ class Window {
     exit(windowId: string) {
         const win = factory.findFirst({ _id: windowId })
         if (win) {
-            const all = factory.find({ appType: win.appType })
-            if (all.length === 1) return
+            const all = this.getAll(win.appType)
+            if (all.length < 2) return
             if (win.active) {
                 for (let i = 0; i < all.length; i++) {
                     let w = all[i]
-                    if (all[i + 1]?._id === win._id) {
-                        factory.update({ active: true }, { _id: w._id })
-                        const screens = Screen.getAll(w._id)
-                        Screen.setActive(screens[0]._id)
+                    if (w._id === windowId) {
+                        let prevWin = all[i - 1]
+                        let nextWin = all[i + 1]
+                        this.setActive(prevWin?._id || nextWin?._id)
                         break;
                     }
                 }
             }
-            Screen.exitAll(win._id)
-            factory.delete({ _id: win._id })
+            Screen.exitAll(windowId)
+            factory.delete({ _id: windowId })
         }
     }
 
@@ -49,11 +50,12 @@ class Window {
         if (win && !win.active) {
             factory.update({ active: false }, { active: true, appType: win.appType })
             factory.update({ active: true }, { _id: win._id })
+            Screen.setActive(Screen.getActive(win._id)._id)
         }
     }
 
     getActive(appType: string) {
-        return factory.findFirst({ active: true, appType })
+        return factory.findFirst({ active: true, appType }) || factory.find({ appType })[0]
     }
 
     getAll(appType: string) {

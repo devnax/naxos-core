@@ -1,15 +1,10 @@
 import React from "react";
-import OSLayout from "../OSLayout";
 import App from '../Handlers/App';
 import HomeIcon from 'naxui-icons/round/Home'
 import DashboardIcon from 'naxui-icons/round/Dashboard'
-import NotificationsIcon from 'naxui-icons/round/Notifications'
 import Text from 'naxui/Text'
 import Input from 'naxui/Input'
 import Stack from "naxui/Stack";
-import Modal from "naxui/Modal";
-import Layer from "naxui/Layer";
-import Transition from "naxui/Transition";
 
 App.create({
     id: "dashboard",
@@ -41,23 +36,4 @@ App.create({
     },
     onClick: () => { },
     icon: HomeIcon as any
-})
-
-App.create({
-    id: "System",
-    name: "System",
-    onClick: () => {
-
-    },
-    icon: DashboardIcon as any,
-    placeButtom: true,
-})
-
-
-App.create({
-    id: "Notification",
-    name: "Notification",
-    onClick: () => { },
-    icon: NotificationsIcon as any,
-    placeButtom: true,
 })

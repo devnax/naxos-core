@@ -15,13 +15,13 @@ const factory = new ScreenFactory
 class Screen {
 
     open(windowId: string, appId: string) {
-        factory.update({ active: false }, { active: true, windowId })
         const c = factory.insert({
             windowId,
             appId,
             active: true,
             size: 0
         })
+        this.setActive(c._id)
         return c._id
     }
 
@@ -29,12 +29,14 @@ class Screen {
         const screen = factory.findFirst({ _id: screenId })
         if (screen) {
             const all = factory.find({ windowId: screen.windowId })
-            if (all.length === 1) return
+            if (all.length < 2) return
             if (screen.active) {
                 for (let i = 0; i < all.length; i++) {
                     let s = all[i]
-                    if (all[i + 1]?._id === screen._id) {
-                        factory.update({ active: true }, { _id: s._id })
+                    if (s._id === screenId) {
+                        let prevWin = all[i - 1]
+                        let nextWin = all[i + 1]
+                        this.setActive(prevWin?._id || nextWin?._id)
                         break;
                     }
                 }
@@ -48,7 +50,7 @@ class Screen {
     }
 
     getActive(windowId: string) {
-        return factory.findFirst({ active: true, windowId })
+        return factory.findFirst({ active: true, windowId }) || factory.find({ windowId })[0]
     }
 
     setActive(screenId: string) {
@@ -72,7 +74,6 @@ class Screen {
             }
         }
     }
-
 
     getAll(windowId: string) {
         return factory.find({ windowId })

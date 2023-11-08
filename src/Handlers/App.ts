@@ -19,7 +19,6 @@ export type AppProps = {
     type?: string;
     id: string;
     name: string;
-    placeButtom?: boolean;
     icon: () => ReactElement;
     render?: () => ReactElement;
     onClick?: IconButtonProps['onClick'];
@@ -38,7 +37,6 @@ class App {
         }
         return factory.insert({
             type: this.defaultAppType,
-            placeButtom: false,
             shortcutKeys: [],
             ...props
         })
@@ -48,8 +46,8 @@ class App {
         return factory.findFirst({ id })
     }
 
-    getAllByType(type: string, placeButtom = false) {
-        return factory.find({ type, placeButtom })
+    getAllByType(type: string) {
+        return factory.find({ type })
     }
 
     getActiveApp(type: string) {

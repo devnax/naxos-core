@@ -6,10 +6,18 @@ import App from "../Handlers/App";
 import { noDispatch, withStore } from "state-range";
 import WindowView from "./WindowView";
 import Window from "../Handlers/Window";
+import { IconButtonProps } from "naxui/IconButton";
+import Stack from "naxui/Stack";
+
+export type EndIconType = {
+    icon: () => ReactElement;
+    onClick?: IconButtonProps['onClick'];
+}
 
 export type OSLayoutProps = {
     viewMode?: "mobile" | "pc";
     appType: string;
+    endIcons?: EndIconType[];
     dockPosition?: "top" | "left" | "right" | "bottom";
     centerMode?: boolean;
     dockBgcolor?: string;
@@ -46,7 +54,6 @@ const OSLayout = (props: OSLayoutProps) => {
         })
     }, [])
 
-
     const windows = Window.getAll(appType)
     const mediaScreen = useMediaScreen()
     const isMobile = mediaScreen.isDown("md")
@@ -59,10 +66,6 @@ const OSLayout = (props: OSLayoutProps) => {
         flexDirection = isHorizental ? "column-reverse" : "row-reverse"
     }
 
-    useEffect(() => {
-        return () => {
-        }
-    }, [])
 
     return (
         <ViewBox
@@ -83,11 +86,11 @@ const OSLayout = (props: OSLayoutProps) => {
                 }
             }}
         >
-            {
-                windows.map(win => {
-                    return <WindowView key={win._id} windowId={win._id} appType={appType} />
-                })
-            }
+            <Stack position="relative" width="100%" height="100%">
+                {
+                    windows.map(win => (<WindowView key={win._id} windowId={win._id} />))
+                }
+            </Stack>
         </ViewBox>
     )
 }

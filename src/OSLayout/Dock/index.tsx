@@ -4,12 +4,13 @@ import React from "react";
 import DockIcon from "./DockIcon";
 import { OSLayoutProps } from "..";
 import App from "../../Handlers/App";
+import IconButton from "naxui/IconButton";
 
 
-const Dock = ({ dockPosition, appType, centerMode, dockBgcolor, logo }: OSLayoutProps) => {
+const Dock = ({ dockPosition, appType, endIcons, centerMode, dockBgcolor, logo }: OSLayoutProps) => {
     let isHorizental = dockPosition === "top" || dockPosition === "bottom"
     let apps = App.getAllByType(appType)
-    let endApps = App.getAllByType(appType, true)
+
 
     return (
         <ViewBox
@@ -27,7 +28,7 @@ const Dock = ({ dockPosition, appType, centerMode, dockBgcolor, logo }: OSLayout
                         height={isHorizental ? "100%" : "initial"}
                         width={isHorizental ? "initial" : "100%"}
                         alignItems="center"
-                        flexDirection={isHorizental ? "row-reverse" : "column-reverse"}
+                        flexDirection={isHorizental ? "row" : "column"}
                     >
                         {logo}
                     </Stack>}
@@ -39,10 +40,21 @@ const Dock = ({ dockPosition, appType, centerMode, dockBgcolor, logo }: OSLayout
                     height={isHorizental ? "100%" : "initial"}
                     width={isHorizental ? "initial" : "100%"}
                     alignItems="center"
-                    flexDirection={isHorizental ? "row-reverse" : "column-reverse"}
+                    flexDirection={isHorizental ? "row" : "column"}
                 >
                     {
-                        endApps.map(app => <DockIcon key={app._id} appId={app.id} />)
+                        endIcons?.map(({ icon: Icon, onClick }, idx) => {
+                            return (
+                                <IconButton
+                                    key={`${appType}_endicon_${idx}`}
+                                    corner="rounded"
+                                    onClick={onClick}
+                                    color="paper"
+                                >
+                                    <Icon />
+                                </IconButton>
+                            )
+                        })
                     }
                 </Stack>
             }
