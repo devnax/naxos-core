@@ -25,21 +25,41 @@ class Screen {
         return c._id
     }
 
+    next(windowId: string) {
+        const all = this.getAll(windowId)
+        for (let i = 0; i < all.length; i++) {
+            let s = all[i]
+            if (s.active) {
+                let nextWin = all[i + 1] || all[0]
+                if (nextWin && nextWin._id !== s._id) {
+                    this.setActive(nextWin._id)
+                }
+                break;
+            }
+        }
+    }
+
+    prev(windowId: string) {
+        const all = this.getAll(windowId)
+        for (let i = 0; i < all.length; i++) {
+            let s = all[i]
+            if (s.active) {
+                let prevWin = all[i - 1] || all[all.length - 1]
+                if (prevWin && prevWin._id !== s._id) {
+                    this.setActive(prevWin._id)
+                }
+                break;
+            }
+        }
+    }
+
     exit(screenId: string) {
         const screen = factory.findFirst({ _id: screenId })
         if (screen) {
             const all = factory.find({ windowId: screen.windowId })
             if (all.length < 2) return
             if (screen.active) {
-                for (let i = 0; i < all.length; i++) {
-                    let s = all[i]
-                    if (s._id === screenId) {
-                        let prevWin = all[i - 1]
-                        let nextWin = all[i + 1]
-                        this.setActive(prevWin?._id || nextWin?._id)
-                        break;
-                    }
-                }
+                this.prev(screen.windowId)
             }
             factory.delete({ _id: screen._id })
         }
@@ -64,7 +84,7 @@ class Screen {
     setActiveApp(appId: string) {
         const app = App.get(appId)
         if (app && app.render) {
-            const activeWindow = Window.getActive(app.type as any)
+            const activeWindow = Window.getActive()
             if (activeWindow) {
                 const activeScreen = this.getActive(activeWindow._id)
                 if (activeScreen) {

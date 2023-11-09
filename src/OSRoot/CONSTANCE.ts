@@ -1,6 +1,0 @@
-const CONSTANCE = {
-    OS_ONLOAD: "OS_ONLOAD",
-    OS_ONREADY: "OS_ONREADY",
-    OS_SHUTDOWN: "OS_SHUTDOWN"
-}
-export default CONSTANCE

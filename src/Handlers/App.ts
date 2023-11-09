@@ -16,7 +16,6 @@ export type ShortcutKey = {
 
 
 export type AppProps = {
-    type?: string;
     id: string;
     name: string;
     icon: () => ReactElement;
@@ -30,13 +29,11 @@ class AppFactory extends Store<AppProps, AppMetaProps> { }
 const factory = new AppFactory()
 
 class App {
-    defaultAppType = 'osroot'
     create(props: AppProps) {
         if (factory.findFirst({ id: props.id })) {
             return
         }
         return factory.insert({
-            type: this.defaultAppType,
             shortcutKeys: [],
             ...props
         })
@@ -46,12 +43,12 @@ class App {
         return factory.findFirst({ id })
     }
 
-    getAllByType(type: string) {
-        return factory.find({ type })
+    getApps() {
+        return factory.getAll()
     }
 
-    getActiveApp(type: string) {
-        const win = Window.getActive(type)
+    getActiveApp() {
+        const win = Window.getActive()
         if (win) {
             const screen = Screen.getActive(win._id)
             if (screen) {

@@ -5,11 +5,14 @@ import DockIcon from "./DockIcon";
 import { OSLayoutProps } from "..";
 import App from "../../Handlers/App";
 import IconButton from "naxui/IconButton";
+import WindowStackIcon from 'naxui-icons/round/Layers'
+import Window from "../../Handlers/Window";
+import DashboardIcon from 'naxui-icons/round/Dashboard'
 
 
-const Dock = ({ dockPosition, appType, endIcons, centerMode, dockBgcolor, logo }: OSLayoutProps) => {
+const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSLayoutProps) => {
     let isHorizental = dockPosition === "top" || dockPosition === "bottom"
-    let apps = App.getAllByType(appType)
+    let apps = App.getApps()
 
 
     return (
@@ -43,19 +46,26 @@ const Dock = ({ dockPosition, appType, endIcons, centerMode, dockBgcolor, logo }
                     flexDirection={isHorizental ? "row" : "column"}
                 >
                     {
-                        endIcons?.map(({ icon: Icon, onClick }, idx) => {
-                            return (
-                                <IconButton
-                                    key={`${appType}_endicon_${idx}`}
-                                    corner="rounded"
-                                    onClick={onClick}
-                                    color="paper"
-                                >
-                                    <Icon />
-                                </IconButton>
-                            )
-                        })
+                        Window.getAll().length > 1 && <IconButton
+                            corner="rounded"
+                            onClick={() => {
+
+                            }}
+                            color="paper"
+                        >
+                            <WindowStackIcon />
+                        </IconButton>
                     }
+
+                    <IconButton
+                        corner="rounded"
+                        onClick={() => {
+
+                        }}
+                        color="paper"
+                    >
+                        <DashboardIcon />
+                    </IconButton>
                 </Stack>
             }
             direction={isHorizental ? "row" : "column"}

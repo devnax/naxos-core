@@ -11,7 +11,7 @@ type Props = {
 
 const WindowView = ({ windowId }: Props) => {
     const win: any = Window.get(windowId)
-    const activeWindow: any = Window.getActive(win.appType)
+    const activeWindow: any = Window.getActive()
     const screens = Screen.getAll(windowId)
     let isActive = windowId === activeWindow._id
 

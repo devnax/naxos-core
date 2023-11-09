@@ -6,22 +6,34 @@ type CallbackType = (props?: PropsType) => any;
 
 type ListenerType = {
     name: string;
-    callback: CallbackType
+    callback: CallbackType;
+    single?: boolean;
 }
 class Factory extends Store<ListenerType> { }
-const factory = new Factory
-
 
 class Listener {
+    factories: { [key: string]: Factory } = {}
 
-    on(name: string, callback: CallbackType) {
+    on(name: string, callback: CallbackType, single = false) {
+        let factory = this.factories[name]
+        if (!factory) {
+            this.factories[name] = new Factory
+            factory = this.factories[name]
+        }
+
         const has = factory.find({ name }).find(i => i.callback.toString() == callback.toString())
         if (has) return
-        factory.insert({ name, callback })
+        let isSingle = factory.findFirst({ name, single: true })
+
+        if (isSingle) return
+        factory.insert({ name, callback, single })
     }
 
     listen(name: string, props?: PropsType) {
+        let factory = this.factories[name]
+        if (!factory) return
         const items = factory.find({ name })
+
         const vals: any[] = []
         for (let item of items) {
             const val = item.callback(props)
@@ -35,6 +47,8 @@ class Listener {
     }
 
     off(name: string, callback: CallbackType) {
+        let factory = this.factories[name]
+        if (!factory) return
         const items = factory.find({ name })
         items.forEach((item) => {
             if (item.callback.toString() === callback.toString()) {

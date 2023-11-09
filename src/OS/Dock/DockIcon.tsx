@@ -11,7 +11,7 @@ export type DockIconProps = {
 
 const DockIcon = ({ appId }: DockIconProps) => {
     const app = App.get(appId) as AppProps
-    const activeWindow = Window.getActive(app.type as string) as WindowTypes
+    const activeWindow = Window.getActive() as WindowTypes
     const activeScreen = Screen.getActive((activeWindow as any)._id as any) as ScreenTypes
     const active = activeScreen.active && activeScreen.appId === appId
     const Icon = app.icon
