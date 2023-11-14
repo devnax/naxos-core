@@ -1,4 +1,4 @@
-import { Store } from "state-range";
+import { Store, noDispatch } from "state-range";
 import Screen from "./Screen";
 
 export type WindowTypes = {
@@ -59,6 +59,15 @@ class Window {
             Screen.exitAll(windowId)
             factory.delete({ _id: windowId })
         }
+    }
+
+    closeAll() {
+        const items = factory.getAll()
+        items.map((w, idx) => {
+            if (idx !== 0) {
+                this.exit(w._id)
+            }
+        })
     }
 
     setActive(windowId: string) {

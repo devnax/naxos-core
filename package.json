@@ -24,8 +24,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "is-hotkey": "^0.2.0",
-    "naxui": "^1.2.1",
+    "naxui": "^1.2.2",
     "naxui-icons": "^1.0.5",
     "naxui-manager": "^1.6.5",
     "react-browser-scrollbar": "^1.1.5",

@@ -1,19 +1,24 @@
 import Stack from "naxui/Stack";
 import ViewBox from "naxui/ViewBox";
+import Badge from "naxui/Badge";
 import React from "react";
 import DockIcon from "./DockIcon";
-import { OSLayoutProps } from "..";
+import { OSProps } from "..";
 import App from "../../Handlers/App";
 import IconButton from "naxui/IconButton";
 import WindowStackIcon from 'naxui-icons/round/Layers'
 import Window from "../../Handlers/Window";
 import DashboardIcon from 'naxui-icons/round/Dashboard'
+import System, { systemFactory } from "../../Handlers/System";
+import { withStore } from "state-range";
+import Menu from "naxui/Menu";
+import List from "naxui/List";
+import ListItem from "naxui/ListItem";
 
 
-const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSLayoutProps) => {
+const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSProps) => {
     let isHorizental = dockPosition === "top" || dockPosition === "bottom"
     let apps = App.getApps()
-
 
     return (
         <ViewBox
@@ -46,15 +51,32 @@ const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSLayoutProps) =>
                     flexDirection={isHorizental ? "row" : "column"}
                 >
                     {
-                        Window.getAll().length > 1 && <IconButton
-                            corner="rounded"
-                            onClick={() => {
-
-                            }}
-                            color="paper"
-                        >
-                            <WindowStackIcon />
-                        </IconButton>
+                        Window.getAll().length > 1 && <Badge key={Window.getAll().length} content={Window.getAll().length} >
+                            <IconButton
+                                corner="rounded"
+                                onClick={() => {
+                                    const isWindowPanelOpen = systemFactory.getMeta("TOGGLE_WINDOW_PANEL", false)
+                                    if (!isWindowPanelOpen) {
+                                        System.toggleOpenWindowPanel()
+                                    }
+                                }}
+                                onContextMenu={(e) => {
+                                    e.preventDefault()
+                                    Menu.close()
+                                    Menu.open(e.currentTarget as any, <List>
+                                        <ListItem
+                                            onClick={() => {
+                                                Menu.close()
+                                                Window.closeAll()
+                                            }}
+                                        >Close All</ListItem>
+                                    </List>, { placement: "right-top" })
+                                }}
+                                color="paper"
+                            >
+                                <WindowStackIcon />
+                            </IconButton>
+                        </Badge>
                     }
 
                     <IconButton
@@ -93,4 +115,4 @@ const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSLayoutProps) =>
     )
 }
 
-export default Dock
+export default withStore(Dock)

@@ -3,7 +3,7 @@ import Screen from "../Handlers/Screen";
 import ScreenView from "./ScreenView";
 import Window from "../Handlers/Window";
 import { withStore } from "state-range";
-import ViewBox from "naxui/ViewBox";
+import Stack from "naxui/Stack";
 
 type Props = {
     windowId: string;
@@ -16,7 +16,7 @@ const WindowView = ({ windowId }: Props) => {
     let isActive = windowId === activeWindow._id
 
     return (
-        <ViewBox
+        <Stack
             id={win._id}
             width="100%"
             height="100%"
@@ -28,9 +28,7 @@ const WindowView = ({ windowId }: Props) => {
             bottom={0}
             right={0}
             bgcolor='color.paper.light'
-            onClick={() => {
-                Window.setActive(windowId)
-            }}
+            onClick={() => Window.setActive(windowId)}
             zIndex={1}
             visibility={isActive ? "visible" : "hidden"}
         >
@@ -39,7 +37,7 @@ const WindowView = ({ windowId }: Props) => {
                     return <ScreenView key={screen._id} screenId={screen._id} />
                 })
             }
-        </ViewBox>
+        </Stack>
     )
 }
 

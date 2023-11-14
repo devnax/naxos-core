@@ -10,10 +10,10 @@ import { IconButtonProps } from "naxui/IconButton";
 import Stack from "naxui/Stack";
 import WindowListPanel from './WindowListPanel'
 import shortcuts from "../config/shortcuts";
-import isHotkey from 'is-hotkey'
+// import isHotkey, { toKeyName } from 'is-hotkey'
 import Listener from "../Handlers/Listener";
 import CONSTANCE from "../config/CONSTANCE";
-
+import { isHotkey, hasActionKey } from "../hotkey";
 
 export type EndIconType = {
     icon: () => ReactElement;
@@ -30,10 +30,10 @@ export type OSProps = {
     logo?: ReactElement
 }
 
-const OS = (props: OSProps) => {
-    const [winListOpen, setWinListOpen] = useState(false)
 
+const OS = (props: OSProps) => {
     const [height, setHeight] = useState<any>("100vh")
+
     useWindowResize(() => {
         if (window.innerHeight !== height) {
             setHeight(window.innerHeight)
@@ -43,7 +43,6 @@ const OS = (props: OSProps) => {
 
     useMemo(() => {
         noDispatch(() => {
-
             let runningApp: any = App.getActiveApp()
             if (!runningApp) {
                 const apps = App.getApps()
@@ -55,13 +54,13 @@ const OS = (props: OSProps) => {
             const windows = Window.getAll()
             if (!windows.length && runningApp) {
                 Window.open(runningApp.id)
-                Window.open("home")
             }
-
         })
     }, [])
 
     let hotkeyHandler = (e: any) => {
+        if (!hasActionKey(e)) return
+
         let runningApp = App.getActiveApp()
         let keys = [
             ...(runningApp?.shortcutKeys || []),
@@ -69,7 +68,10 @@ const OS = (props: OSProps) => {
         ]
 
         for (let sk of keys) {
+
             if (isHotkey(sk.key, e)) {
+                console.log(sk);
+
                 e.preventDefault()
                 Listener.listen(sk.listener, sk.props)
                 return false
@@ -127,13 +129,7 @@ const OS = (props: OSProps) => {
                         windows.map(win => (<WindowView key={win._id} windowId={win._id} />))
                     }
                 </Stack>
-                {
-                    winListOpen && <WindowListPanel
-                        onClose={() => {
-                            setWinListOpen(false)
-                        }}
-                    />
-                }
+                <WindowListPanel />
             </ViewBox>
         </ThemeProvider>
     )
