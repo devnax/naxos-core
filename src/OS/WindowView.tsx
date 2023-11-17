@@ -1,19 +1,18 @@
 import React from "react";
-import Screen from "../Handlers/Screen";
 import ScreenView from "./ScreenView";
 import Window from "../Handlers/Window";
 import { withStore } from "state-range";
 import Stack from "naxui/Stack";
+import { WindowStoreType } from "../Handlers/Window";
 
 type Props = {
     windowId: string;
 }
 
 const WindowView = ({ windowId }: Props) => {
-    const win: any = Window.get(windowId)
-    const activeWindow: any = Window.getActive()
-    const screens = Screen.getAll(windowId)
-    let isActive = windowId === activeWindow._id
+    const win: WindowStoreType = Window.get(windowId) as any
+    const activeWindow: any = Window.getActiveWindow()
+    let isActive = windowId === activeWindow?._id
 
     return (
         <Stack
@@ -33,8 +32,8 @@ const WindowView = ({ windowId }: Props) => {
             visibility={isActive ? "visible" : "hidden"}
         >
             {
-                screens.map(screen => {
-                    return <ScreenView key={screen._id} screenId={screen._id} />
+                win.apps.map((appId) => {
+                    return <ScreenView key={windowId + appId} appId={appId} />
                 })
             }
         </Stack>

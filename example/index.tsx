@@ -4,7 +4,8 @@ import { createRoot } from 'react-dom/client';
 import { OS } from '../src';
 
 const Root = () => {
-  return <OS />
+  return <OS
+  />
 }
 
 const root = createRoot(document.getElementById('root') as any)

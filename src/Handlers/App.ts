@@ -1,8 +1,6 @@
 import { ReactElement } from 'react';
 import { Store } from 'state-range'
 import { IconButtonProps } from 'naxui/IconButton';
-import Window from './Window';
-import Screen from './Screen';
 
 type AppMetaProps = {
     runningApp: string;
@@ -14,7 +12,6 @@ export type ShortcutKey = {
     props?: any
 }
 
-
 export type AppProps = {
     id: string;
     name: string;
@@ -25,36 +22,23 @@ export type AppProps = {
     onContextMenu?: () => ReactElement;
 }
 
-class AppFactory extends Store<AppProps, AppMetaProps> { }
-const factory = new AppFactory()
-
-class App {
+class App extends Store<AppProps, AppMetaProps> {
     create(props: AppProps) {
-        if (factory.findFirst({ id: props.id })) {
+        if (this.findFirst({ id: props.id })) {
             return
         }
-        return factory.insert({
+        return this.insert({
             shortcutKeys: [],
             ...props
         })
     }
 
     get(id: string) {
-        return factory.findFirst({ id })
+        return this.findFirst({ id })
     }
 
     getApps() {
-        return factory.getAll()
-    }
-
-    getActiveApp() {
-        const win = Window.getActive()
-        if (win) {
-            const screen = Screen.getActive(win._id)
-            if (screen) {
-                return factory.findFirst({ id: screen.appId })
-            }
-        }
+        return this.getAll()
     }
 }
 

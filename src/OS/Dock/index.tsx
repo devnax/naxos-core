@@ -8,17 +8,35 @@ import App from "../../Handlers/App";
 import IconButton from "naxui/IconButton";
 import WindowStackIcon from 'naxui-icons/round/Layers'
 import Window from "../../Handlers/Window";
-import DashboardIcon from 'naxui-icons/round/Dashboard'
+import DashboardIcon from 'naxui-icons/round/GridView'
 import System, { systemFactory } from "../../Handlers/System";
 import { withStore } from "state-range";
 import Menu from "naxui/Menu";
 import List from "naxui/List";
 import ListItem from "naxui/ListItem";
-
+import { PlacementTypes } from "naxui/Menu/placedMenu";
+import useBlurCss from 'naxui/useBlurCss'
+import OSMenu from "./OSMenu";
 
 const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSProps) => {
     let isHorizental = dockPosition === "top" || dockPosition === "bottom"
     let apps = App.getApps()
+    let activeApp = Window.getActiveApp()
+    let menu_placement: PlacementTypes = "right-bottom"
+    let blurCss = useBlurCss(20)
+
+    switch (dockPosition) {
+        case "top":
+            menu_placement = "bottom-right"
+            break;
+        case "right":
+            menu_placement = "left-bottom"
+            break;
+        case "bottom":
+            menu_placement = "top-left"
+            break;
+    }
+
 
     return (
         <ViewBox
@@ -40,6 +58,24 @@ const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSProps) => {
                     >
                         {logo}
                     </Stack>}
+                    <Stack
+                        width={isHorizental ? "auto" : 55}
+                        height={isHorizental ? 55 : "auto"}
+                        alignItems="center"
+                        justifyContent="center"
+                        cursor="pointer"
+                        onClick={(e: any) => {
+                            Window.deactiveAll()
+                        }}
+                    >
+                        <IconButton
+                            corner="rounded"
+                            bgcolor={!activeApp ? "color.primary.soft" : "transparent"}
+                            color={!activeApp ? "primary" : "paper"}
+                        >
+                            <DashboardIcon />
+                        </IconButton>
+                    </Stack>
                 </>
             }
             footer={
@@ -63,11 +99,11 @@ const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSProps) => {
                                 onContextMenu={(e) => {
                                     e.preventDefault()
                                     Menu.close()
-                                    Menu.open(e.currentTarget as any, <List>
+                                    Menu.open(e.currentTarget as any, <List minWidth={250}>
                                         <ListItem
                                             onClick={() => {
                                                 Menu.close()
-                                                Window.closeAll()
+                                                Window.clear()
                                             }}
                                         >Close All</ListItem>
                                     </List>, { placement: "right-top" })
@@ -79,18 +115,36 @@ const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSProps) => {
                         </Badge>
                     }
 
-                    <IconButton
-                        corner="rounded"
-                        onClick={() => {
-
+                    <Stack
+                        width={isHorizental ? "auto" : 55}
+                        height={isHorizental ? 55 : "auto"}
+                        alignItems="center"
+                        justifyContent="center"
+                        cursor="pointer"
+                        onClick={(e: any) => {
+                            Menu.close()
+                            Menu.open(e.currentTarget, <OSMenu />, {
+                                placement: menu_placement,
+                                bgcolor: "transparent",
+                                shadow: 10,
+                                transitionProps: {
+                                    duration: 250
+                                },
+                                ...blurCss
+                            })
                         }}
-                        color="paper"
                     >
-                        <DashboardIcon />
-                    </IconButton>
+                        <IconButton
+                            corner="rounded"
+
+                            color="paper"
+                        >
+                            <DashboardIcon />
+                        </IconButton>
+                    </Stack>
                 </Stack>
             }
-            direction={isHorizental ? "row" : "column"}
+            horizental={isHorizental}
             flex="initial"
             scrollbarProps={{
                 style: {
@@ -108,7 +162,7 @@ const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSProps) => {
                 direction={isHorizental ? "row" : "column"}
             >
                 {
-                    apps.map(app => <DockIcon key={app._id} appId={app.id} />)
+                    apps.map(app => <DockIcon key={app._id} isHorizental={isHorizental} appId={app.id} />)
                 }
             </Stack>
         </ViewBox>

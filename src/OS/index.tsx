@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useMemo, useState } from "react"
+import React, { ReactElement, useMemo, useState } from "react"
 import ViewBox from "naxui/ViewBox"
 import { ThemeProvider, useMediaScreen, useWindowResize } from "naxui-manager";
 import Dock from "./Dock";
@@ -10,7 +10,6 @@ import { IconButtonProps } from "naxui/IconButton";
 import Stack from "naxui/Stack";
 import WindowListPanel from './WindowListPanel'
 import shortcuts from "../config/shortcuts";
-// import isHotkey, { toKeyName } from 'is-hotkey'
 import Listener from "../Handlers/Listener";
 import CONSTANCE from "../config/CONSTANCE";
 import { isHotkey, hasActionKey } from "../hotkey";
@@ -43,35 +42,24 @@ const OS = (props: OSProps) => {
 
     useMemo(() => {
         noDispatch(() => {
-            let runningApp: any = App.getActiveApp()
-            if (!runningApp) {
-                const apps = App.getApps()
-                if (apps.length) {
-                    runningApp = apps[0]
-                }
-            }
-
             const windows = Window.getAll()
-            if (!windows.length && runningApp) {
-                Window.open(runningApp.id)
+            const apps = App.getAll()
+            if (!windows.length && apps.length) {
+                Window.open(apps[0].id)
             }
         })
     }, [])
 
     let hotkeyHandler = (e: any) => {
         if (!hasActionKey(e)) return
-
-        let runningApp = App.getActiveApp()
+        let runningApp = Window.getActiveApp()
         let keys = [
             ...(runningApp?.shortcutKeys || []),
             ...(shortcuts || [])
         ]
 
         for (let sk of keys) {
-
             if (isHotkey(sk.key, e)) {
-                console.log(sk);
-
                 e.preventDefault()
                 Listener.listen(sk.listener, sk.props)
                 return false
@@ -116,7 +104,7 @@ const OS = (props: OSProps) => {
                 onContextMenu={(e: any) => {
                     if (!["INPUT", "TEXTAREA"].includes(e.target.tagName)) {
                         // e.preventDefault()
-                        let runningApp = App.getActiveApp()
+                        let runningApp = Window.getActiveApp()
                         if (runningApp && runningApp.onContextMenu) {
                             // open the menu
                             const view = runningApp.onContextMenu()

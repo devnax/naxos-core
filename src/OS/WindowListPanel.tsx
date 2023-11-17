@@ -1,28 +1,20 @@
 import Stack from "naxui/Stack";
 import Transition from "naxui/Transition";
 import Portal from "naxui/Portal";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Window from "../Handlers/Window";
 import App, { AppProps } from "../Handlers/App";
-import Screen from "../Handlers/Screen";
 import CloseIcon from 'naxui-icons/round/Close'
 import IconButton from "naxui/IconButton";
 import { withStore } from "state-range";
-import Listener from "../Handlers/Listener";
-import CONSTANCE from "../config/CONSTANCE";
 import System, { systemFactory } from "../Handlers/System";
-
-type Props = {
-    onClose?: () => void
-}
 
 
 const Item = ({ win }) => {
     let [open, setOpen] = useState(true)
-    const activeWindow = Window.getActive()
-    const screen = Screen.getActive(win._id)
-    const { icon } = App.get(screen.appId) as AppProps
-    let isActive = activeWindow._id === win._id
+    const activeWindow = Window.getActiveWindow()
+    const { icon } = App.get(win.activeApp) as AppProps
+    let isActive = activeWindow?._id === win._id
     const Icon: any = icon
 
     return (
@@ -32,7 +24,7 @@ const Item = ({ win }) => {
             type="zoom"
             onFinish={() => {
                 if (!open) {
-                    Window.exit(win._id)
+                    Window.close(win._id)
                 }
             }}
         >

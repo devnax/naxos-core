@@ -1,96 +1,106 @@
-import { Store, noDispatch } from "state-range";
-import Screen from "./Screen";
+import { Store } from "state-range";
+import App from "./App";
 
-export type WindowTypes = {
+
+export type WindowType = {
     active: boolean;
+    apps: string[]
+    activeApp: string;
 }
 
+export type WindowStoreType = WindowType & {
+    _id: string;
+    observe: number
+}
 
-class WindowFactory extends Store<WindowTypes> { }
-const factory = new WindowFactory
-
-class Window {
-
+class Window extends Store<WindowType> {
     open(appId: string) {
-        const c = factory.insert({
-            active: false
+        const win = this.insert({
+            active: true,
+            apps: [appId],
+            activeApp: appId
         })
-        Screen.open(c._id, appId)
-        this.setActive(c._id)
-        return c._id
+        this.setActive(win._id)
     }
 
-    next() {
+    close(windowId: string) {
+        const win = this.get(windowId)
         const all = this.getAll()
-        for (let i = 0; i < all.length; i++) {
-            let w = all[i]
-            if (w.active) {
-                let nextWin = all[i + 1] || all[0]
-                if (nextWin && nextWin._id !== w._id) {
-                    this.setActive(nextWin._id)
-                }
-                break;
-            }
+        if (win && all.length > 1) {
+            this.delete({ _id: windowId })
+            if (win.active) this.activeNext()
         }
     }
 
-    prev() {
-        const all = this.getAll()
-        for (let i = 0; i < all.length; i++) {
-            let w = all[i]
-            if (w.active) {
-                let prevWin = all[i - 1] || all[all.length - 1]
-                if (prevWin && prevWin._id !== w._id) {
-                    this.setActive(prevWin._id)
-                }
-                break;
-            }
-        }
-    }
-
-    exit(windowId: string) {
-        const win = factory.findFirst({ _id: windowId })
-        if (win) {
-            const all = this.getAll()
-            if (all.length < 2) return
-            if (win.active) {
-                this.prev()
-            }
-            Screen.exitAll(windowId)
-            factory.delete({ _id: windowId })
-        }
-    }
-
-    closeAll() {
-        const items = factory.getAll()
-        items.map((w, idx) => {
-            if (idx !== 0) {
-                this.exit(w._id)
+    clear() {
+        this.getAll().forEach((w, idx) => {
+            if (idx) { // skip first window
+                this.delete({ _id: w._id })
             }
         })
+    }
+
+    split(appId: string) {
+        const win = this.getActiveWindow()
+        if (win && !win.apps.includes(appId)) {
+            this.update({ activeApp: appId, apps: [...win.apps, appId] }, { _id: win._id })
+        }
     }
 
     setActive(windowId: string) {
-        const win = factory.findFirst({ _id: windowId })
-        if (win && !win.active) {
-            factory.update({ active: false }, { active: true })
-            factory.update({ active: true }, { _id: win._id })
-            Screen.setActive(Screen.getActive(win._id)._id)
+        const win = this.get(windowId)
+        if (win) {
+            this.update({ active: false }, { active: true })
+            this.update({ active: true }, { _id: windowId })
+            if (!win.activeApp) {
+                this.setActiveApp(win.apps[0])
+            }
         }
     }
 
-    getActive() {
-        return factory.findFirst({ active: true, }) || factory.getAll()[0]
+    setActiveApp(appId: string) {
+        const win = this.getActiveWindow()
+        if (win) {
+            this.update({ activeApp: appId, apps: [appId] }, { _id: win._id })
+        }
     }
 
-    getAll() {
-        return factory.getAll()
+    deactiveAll() {
+        this.update({ active: false }, { active: true })
     }
 
+    activeNext() {
+        const win = this.getActiveWindow()
+        const currentIndex = this.getIndex({ _id: win?._id }) || 0
+        const windows = this.getAll()
+        const next = windows[currentIndex + 1] || windows[0]
+        this.setActive(next._id)
+    }
+
+    activePrev() {
+        const win = this.getActiveWindow()
+        const currentIndex = this.getIndex({ _id: win?._id }) || 0
+        const windows = this.getAll()
+        const prev = windows[currentIndex - 1] || windows[windows.length - 1]
+        this.setActive(prev._id)
+    }
+
+    // ========
     get(windowId: string) {
-        return factory.findFirst({ _id: windowId })
+        return this.findFirst({ _id: windowId })
     }
 
+    getActiveWindow() {
+        return this.findFirst({ active: true })
+    }
+
+    getActiveApp() {
+        const activeWin = this.getActiveWindow()
+        if (activeWin) {
+            return App.findFirst({ id: activeWin.activeApp })
+        }
+    }
 }
+
 
 export default new Window

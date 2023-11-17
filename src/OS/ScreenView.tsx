@@ -1,16 +1,15 @@
 import React from "react";
-import App from "../Handlers/App";
-import Screen, { ScreenTypes } from "../Handlers/Screen";
+import App, { AppProps } from "../Handlers/App";
 import { withStore } from "state-range";
 import Stack from "naxui/Stack";
+import Window from "../Handlers/Window";
 
 type Props = {
-    screenId: string;
+    appId: string;
 }
 
-const ScreenView = ({ screenId }: Props) => {
-    const screen = Screen.get(screenId) as ScreenTypes
-    let app = App.get(screen.appId)
+const ScreenView = ({ appId }: Props) => {
+    const app = App.get(appId) as AppProps
     let Render: any = () => <></>
     if (app?.render) Render = app.render
 
@@ -21,7 +20,7 @@ const ScreenView = ({ screenId }: Props) => {
             height="100%"
             overflow="hidden"
             onClick={() => {
-                Screen.setActive(screenId)
+                Window.setActiveApp(app.id)
             }}
         >
             <Render />
