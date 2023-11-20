@@ -1,29 +1,12 @@
 import React from "react";
 import App from '../Handlers/App';
 import HomeIcon from 'naxui-icons/round/Home'
-import DashboardIcon from 'naxui-icons/round/Dashboard'
 import Text from 'naxui/Text'
 import Input from 'naxui/Input'
 import Stack from "naxui/Stack";
-
-App.create({
-    id: "dashboard",
-    name: "Dashboard",
-    render: () => {
-        return <>
-            <Text variant="h1">Dashboard</Text>
-        </>
-    },
-    onClick: () => { },
-    icon: DashboardIcon as any,
-    shortcutKeys: [
-        {
-            key: "mod+s",
-            listener: "modal"
-        }
-    ]
-})
-
+import ShortcutApp from "../Handlers/ShortcutApp";
+import IconSettings from "naxui-icons/round/Settings";
+import IconPeople from "naxui-icons/round/People";
 
 App.create({
     id: "home",
@@ -36,4 +19,28 @@ App.create({
     },
     onClick: () => { },
     icon: HomeIcon as any
+})
+
+
+ShortcutApp.create({
+    id: "settings",
+    name: "Settings",
+    icon: <IconSettings /> as any,
+    render: () => {
+        return (
+            <Text variant="h1">Settings</Text>
+        )
+    }
+})
+
+
+ShortcutApp.create({
+    id: "users",
+    name: "Users",
+    icon: <IconPeople /> as any,
+    render: () => {
+        return (
+            <Text variant="h1">Users</Text>
+        )
+    }
 })

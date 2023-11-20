@@ -1,5 +1,6 @@
 import { Store } from "state-range";
 import App from "./App";
+import ShortcutApp from "./ShortcutApp";
 
 
 export type WindowType = {
@@ -60,8 +61,28 @@ class Window extends Store<WindowType> {
 
     setActiveApp(appId: string) {
         const win = this.getActiveWindow()
+        ShortcutApp.exit()
         if (win) {
             this.update({ activeApp: appId, apps: [appId] }, { _id: win._id })
+        } else {
+            const all = this.getAll()
+            let activated = false;
+            for (let i = 0; i < all.length; i++) {
+                let win = all[i]
+                if (win.activeApp === appId) {
+                    this.setActive(win._id)
+                    activated = true
+                    break;
+                }
+            }
+            if (!activated) {
+                if (!all.length) {
+                    this.open(appId)
+                } else {
+                    this.setActive(all[0]._id)
+                    this.setActiveApp(appId)
+                }
+            }
         }
     }
 

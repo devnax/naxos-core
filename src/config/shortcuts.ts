@@ -14,7 +14,12 @@ const shortcuts = [
         key: "mod+up",
         listener: CONSTANCE.OS_WINDOW_PANEL_TOGGLE,
         props: {}
-    }
+    },
+    // {
+    //     key: "mod+r",
+    //     listener: CONSTANCE.OS_WINDOW_RELOAD,
+    //     props: {}
+    // }
 ]
 
 

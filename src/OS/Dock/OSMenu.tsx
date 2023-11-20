@@ -13,6 +13,8 @@ import AboutIcon from 'naxui-icons/round/Info'
 import LogoutIcon from 'naxui-icons/round/Logout'
 
 import AppsDrawer from '../../AppsDrawer'
+import ShortcutApp from '../../Handlers/ShortcutApp'
+import Menu from 'naxui/Menu'
 
 
 const OSMenu = () => {
@@ -63,6 +65,10 @@ const OSMenu = () => {
             </ListItem>
             <ListItem
                 startIcon={<SettingsIcon />}
+                onClick={() => {
+                    Menu.close()
+                    ShortcutApp.run("settings")
+                }}
             >
                 Settings
             </ListItem>

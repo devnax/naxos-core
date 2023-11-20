@@ -3,7 +3,6 @@ import { Store } from 'state-range'
 import { IconButtonProps } from 'naxui/IconButton';
 
 type AppMetaProps = {
-    runningApp: string;
 }
 
 export type ShortcutKey = {

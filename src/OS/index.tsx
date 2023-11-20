@@ -2,7 +2,6 @@ import React, { ReactElement, useMemo, useState } from "react"
 import ViewBox from "naxui/ViewBox"
 import { ThemeProvider, useMediaScreen, useWindowResize } from "naxui-manager";
 import Dock from "./Dock";
-import App from "../Handlers/App";
 import { noDispatch, withStore } from "state-range";
 import WindowView from "./WindowView";
 import Window from "../Handlers/Window";
@@ -13,6 +12,8 @@ import shortcuts from "../config/shortcuts";
 import Listener from "../Handlers/Listener";
 import CONSTANCE from "../config/CONSTANCE";
 import { isHotkey, hasActionKey } from "../hotkey";
+import Desktop from "./Desktop";
+import ShortcutApp from "../Handlers/ShortcutApp";
 
 export type EndIconType = {
     icon: () => ReactElement;
@@ -39,16 +40,6 @@ const OS = (props: OSProps) => {
         }
     })
     let { dockPosition, bgcolor, bgImage } = props
-
-    useMemo(() => {
-        noDispatch(() => {
-            const windows = Window.getAll()
-            const apps = App.getAll()
-            if (!windows.length && apps.length) {
-                Window.open(apps[0].id)
-            }
-        })
-    }, [])
 
     let hotkeyHandler = (e: any) => {
         if (!hasActionKey(e)) return
@@ -82,6 +73,8 @@ const OS = (props: OSProps) => {
     const windows = Window.getAll()
     const mediaScreen = useMediaScreen()
     const isMobile = mediaScreen.isDown("md")
+    const activeWindow: any = Window.getActiveWindow()
+    const { render: ShortcutRender } = ShortcutApp.getActiveApp() || {}
 
     dockPosition ||= isMobile ? "bottom" : "left"
 
@@ -113,6 +106,12 @@ const OS = (props: OSProps) => {
                 }}
             >
                 <Stack position="relative" width="100%" height="100%">
+                    {
+                        (!activeWindow && !ShortcutRender) && <Desktop />
+                    }
+                    {
+                        !!ShortcutRender && <ShortcutRender />
+                    }
                     {
                         windows.map(win => (<WindowView key={win._id} windowId={win._id} />))
                     }

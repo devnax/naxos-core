@@ -1,29 +1,79 @@
-import Stack from "naxui/Stack";
-import ViewBox from "naxui/ViewBox";
-import Badge from "naxui/Badge";
-import React from "react";
-import DockIcon from "./DockIcon";
-import { OSProps } from "..";
-import App from "../../Handlers/App";
-import IconButton from "naxui/IconButton";
+import Stack from "naxui/Stack"
+import ViewBox from "naxui/ViewBox"
+import Badge from "naxui/Badge"
+import React, { useEffect, useState } from "react"
+import DockIcon from "./DockIcon"
+import { OSProps } from ".."
+import App from "../../Handlers/App"
+import IconButton from "naxui/IconButton"
 import WindowStackIcon from 'naxui-icons/round/Layers'
-import Window from "../../Handlers/Window";
+import Window from "../../Handlers/Window"
 import DashboardIcon from 'naxui-icons/round/GridView'
-import System, { systemFactory } from "../../Handlers/System";
-import { withStore } from "state-range";
-import Menu from "naxui/Menu";
-import List from "naxui/List";
-import ListItem from "naxui/ListItem";
-import { PlacementTypes } from "naxui/Menu/placedMenu";
+import System, { systemFactory } from "../../Handlers/System"
+import { withStore } from "state-range"
+import Menu from "naxui/Menu"
+import List from "naxui/List"
+import ListItem from "naxui/ListItem"
+import { PlacementTypes } from "naxui/Menu/placedMenu"
 import useBlurCss from 'naxui/useBlurCss'
-import OSMenu from "./OSMenu";
+import OSMenu from "./OSMenu"
+import ShortcutApp from "../../Handlers/ShortcutApp"
+import Transition from "naxui/Transition"
 
-const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSProps) => {
+const RenderShortcutAppIcon = ({ dockPosition }: OSProps) => {
+    const { icon: shortcutAppIcon }: any = ShortcutApp.getActiveApp() || {}
+    const isActive = !!shortcutAppIcon
+    const [show, setShow] = useState(false)
+    const [_in, setIn] = useState(false)
+    let isHorizental = dockPosition === "top" || dockPosition === "bottom"
+
+    useEffect(() => {
+        isActive && setShow(true)
+        setIn(isActive)
+    }, [isActive])
+
+    if (!show) return <></>
+
+    return (
+        <Transition
+            in={_in}
+            type="zoom"
+            onFinish={() => {
+                if (!_in) {
+                    setShow(false)
+                }
+            }}
+        >
+            <Stack
+                width={isHorizental ? "auto" : 55}
+                height={isHorizental ? 55 : "auto"}
+                alignItems="center"
+                justifyContent="center"
+                cursor="pointer"
+            >
+                <IconButton
+                    corner="rounded"
+                    bgcolor={"color.primary.soft"}
+                    color={"primary"}
+                    transition={"none"}
+                >
+                    {shortcutAppIcon}
+                </IconButton>
+            </Stack>
+        </Transition>
+    )
+}
+
+
+
+const Dock = (props: OSProps) => {
+    let { dockPosition, centerMode, dockBgcolor, logo } = props
     let isHorizental = dockPosition === "top" || dockPosition === "bottom"
     let apps = App.getApps()
     let activeApp = Window.getActiveApp()
     let menu_placement: PlacementTypes = "right-bottom"
     let blurCss = useBlurCss(20)
+    const { icon: shortcutAppIcon } = ShortcutApp.getActiveApp() || {}
 
     switch (dockPosition) {
         case "top":
@@ -36,7 +86,6 @@ const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSProps) => {
             menu_placement = "top-left"
             break;
     }
-
 
     return (
         <ViewBox
@@ -66,12 +115,13 @@ const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSProps) => {
                         cursor="pointer"
                         onClick={(e: any) => {
                             Window.deactiveAll()
+                            ShortcutApp.exit()
                         }}
                     >
                         <IconButton
                             corner="rounded"
-                            bgcolor={!activeApp ? "color.primary.soft" : "transparent"}
-                            color={!activeApp ? "primary" : "paper"}
+                            bgcolor={(!activeApp && !shortcutAppIcon) ? "color.primary.soft" : "transparent"}
+                            color={(!activeApp && !shortcutAppIcon) ? "primary" : "paper"}
                         >
                             <DashboardIcon />
                         </IconButton>
@@ -86,6 +136,9 @@ const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSProps) => {
                     alignItems="center"
                     flexDirection={isHorizental ? "row" : "column"}
                 >
+
+                    <RenderShortcutAppIcon {...props} />
+
                     {
                         Window.getAll().length > 1 && <Badge key={Window.getAll().length} content={Window.getAll().length} >
                             <IconButton
@@ -136,7 +189,6 @@ const Dock = ({ dockPosition, centerMode, dockBgcolor, logo }: OSProps) => {
                     >
                         <IconButton
                             corner="rounded"
-
                             color="paper"
                         >
                             <DashboardIcon />
