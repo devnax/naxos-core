@@ -6,7 +6,7 @@ import ShortcutApp from "./ShortcutApp";
 export type WindowType = {
     active: boolean;
     apps: string[]
-    activeApp: string;
+    activeIndex: number;
 }
 
 export type WindowStoreType = WindowType & {
@@ -19,7 +19,7 @@ class Window extends Store<WindowType> {
         const win = this.insert({
             active: true,
             apps: [appId],
-            activeApp: appId
+            activeIndex: 0
         })
         this.setActive(win._id)
     }
@@ -43,8 +43,13 @@ class Window extends Store<WindowType> {
 
     split(appId: string) {
         const win = this.getActiveWindow()
-        if (win && !win.apps.includes(appId)) {
-            this.update({ activeApp: appId, apps: [...win.apps, appId] }, { _id: win._id })
+        if (win) {
+            if (!win.apps.includes(appId)) {
+                const apps = [...win.apps, appId]
+                this.update({ activeIndex: apps.indexOf(appId), apps }, { _id: win._id })
+            }
+        } else {
+            this.setActiveApp(appId)
         }
     }
 
@@ -53,23 +58,29 @@ class Window extends Store<WindowType> {
         if (win) {
             this.update({ active: false }, { active: true })
             this.update({ active: true }, { _id: windowId })
-            if (!win.activeApp) {
+            if (typeof win.activeIndex !== 'number') {
                 this.setActiveApp(win.apps[0])
             }
+            ShortcutApp.exit()
         }
     }
 
     setActiveApp(appId: string) {
         const win = this.getActiveWindow()
         ShortcutApp.exit()
+
         if (win) {
-            this.update({ activeApp: appId, apps: [appId] }, { _id: win._id })
+            if (win.apps.includes(appId)) {
+                this.update({ activeIndex: win.apps.indexOf(appId) }, { _id: win._id })
+            } else {
+                this.update({ activeIndex: 0, apps: [appId] }, { _id: win._id })
+            }
         } else {
             const all = this.getAll()
             let activated = false;
             for (let i = 0; i < all.length; i++) {
                 let win = all[i]
-                if (win.activeApp === appId) {
+                if (win.activeIndex === win.apps.indexOf(appId)) {
                     this.setActive(win._id)
                     activated = true
                     break;
@@ -95,7 +106,11 @@ class Window extends Store<WindowType> {
         const currentIndex = this.getIndex({ _id: win?._id }) || 0
         const windows = this.getAll()
         const next = windows[currentIndex + 1] || windows[0]
-        this.setActive(next._id)
+        if (next) {
+            this.setActive(next._id)
+        } else {
+            this.setActiveApp(App.getAll()[0].id)
+        }
     }
 
     activePrev() {
@@ -103,7 +118,11 @@ class Window extends Store<WindowType> {
         const currentIndex = this.getIndex({ _id: win?._id }) || 0
         const windows = this.getAll()
         const prev = windows[currentIndex - 1] || windows[windows.length - 1]
-        this.setActive(prev._id)
+        if (prev) {
+            this.setActive(prev._id)
+        } else {
+            this.setActiveApp(App.getAll()[0].id)
+        }
     }
 
     // ========
@@ -118,7 +137,7 @@ class Window extends Store<WindowType> {
     getActiveApp() {
         const activeWin = this.getActiveWindow()
         if (activeWin) {
-            return App.findFirst({ id: activeWin.activeApp })
+            return App.findFirst({ id: activeWin.apps[activeWin.activeIndex] })
         }
     }
 }

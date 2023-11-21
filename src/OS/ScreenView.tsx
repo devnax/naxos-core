@@ -6,9 +6,10 @@ import Window from "../Handlers/Window";
 
 type Props = {
     appId: string;
+    borderable?: boolean
 }
 
-const ScreenView = ({ appId }: Props) => {
+const ScreenView = ({ appId, borderable }: Props) => {
     const app = App.get(appId) as AppProps
     let Render: any = () => <></>
     if (app?.render) Render = app.render
@@ -22,6 +23,7 @@ const ScreenView = ({ appId }: Props) => {
             onClick={() => {
                 Window.setActiveApp(app.id)
             }}
+            borderRight={borderable ? 1 : 0}
         >
             <Render />
         </Stack>

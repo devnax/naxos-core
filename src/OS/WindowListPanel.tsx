@@ -13,7 +13,7 @@ import System, { systemFactory } from "../Handlers/System";
 const Item = ({ win }) => {
     let [open, setOpen] = useState(true)
     const activeWindow = Window.getActiveWindow()
-    const { icon } = App.get(win.activeApp) as AppProps
+    const { icon } = App.get(win.apps[win.activeIndex]) as AppProps
     let isActive = activeWindow?._id === win._id
     const Icon: any = icon
 

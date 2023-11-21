@@ -4,7 +4,7 @@ import Divider from 'naxui/Divider'
 import List from 'naxui/List'
 import ListItem from 'naxui/ListItem'
 import AppsIcon from 'naxui-icons/round/Apps'
-import WidgetsIcon from 'naxui-icons/round/SpaceDashboard'
+// import WidgetsIcon from 'naxui-icons/round/SpaceDashboard'
 import FinderIcon from 'naxui-icons/round/Search'
 import NotificationsIcon from 'naxui-icons/round/Notifications'
 import SettingsIcon from 'naxui-icons/round/Settings'
@@ -48,11 +48,11 @@ const OSMenu = () => {
             >
                 Apps
             </ListItem>
-            <ListItem
+            {/* <ListItem
                 startIcon={<WidgetsIcon />}
             >
                 Widgets
-            </ListItem>
+            </ListItem> */}
             <ListItem
                 startIcon={<FinderIcon />}
             >

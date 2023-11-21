@@ -21,6 +21,18 @@ App.create({
     icon: HomeIcon as any
 })
 
+App.create({
+    id: "settings",
+    name: "Settings",
+    render: () => {
+        return <Stack p={3}>
+            <Text variant="h3">Settings</Text>
+        </Stack>
+    },
+    onClick: () => { },
+    icon: IconSettings as any
+})
+
 
 ShortcutApp.create({
     id: "settings",

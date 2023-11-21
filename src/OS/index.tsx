@@ -14,6 +14,7 @@ import CONSTANCE from "../config/CONSTANCE";
 import { isHotkey, hasActionKey } from "../hotkey";
 import Desktop from "./Desktop";
 import ShortcutApp from "../Handlers/ShortcutApp";
+import Menu from "naxui/Menu";
 
 export type EndIconType = {
     icon: () => ReactElement;
@@ -95,8 +96,10 @@ const OS = (props: OSProps) => {
                 header={<Dock {...props} dockPosition={dockPosition} />}
                 sx={{ flexDirection, overflow: "hidden" }}
                 onContextMenu={(e: any) => {
+                    e.preventDefault()
+                    Menu.close()
+
                     if (!["INPUT", "TEXTAREA"].includes(e.target.tagName)) {
-                        // e.preventDefault()
                         let runningApp = Window.getActiveApp()
                         if (runningApp && runningApp.onContextMenu) {
                             // open the menu

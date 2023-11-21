@@ -32,8 +32,13 @@ const WindowView = ({ windowId }: Props) => {
             visibility={isActive ? "visible" : "hidden"}
         >
             {
-                win.apps.map((appId) => {
-                    return <ScreenView key={windowId + appId} appId={appId} />
+                win.apps.map((appId, idx) => {
+                    const hasNext = !!win.apps[idx + 1]
+                    return <ScreenView
+                        key={windowId + appId}
+                        appId={appId}
+                        borderable={hasNext}
+                    />
                 })
             }
         </Stack>

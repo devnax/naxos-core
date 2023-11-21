@@ -23,12 +23,14 @@ import Transition from "naxui/Transition"
 const RenderShortcutAppIcon = ({ dockPosition }: OSProps) => {
     const { icon: shortcutAppIcon }: any = ShortcutApp.getActiveApp() || {}
     const isActive = !!shortcutAppIcon
+    const [_icon, setIcon] = useState(shortcutAppIcon)
     const [show, setShow] = useState(false)
     const [_in, setIn] = useState(false)
     let isHorizental = dockPosition === "top" || dockPosition === "bottom"
 
     useEffect(() => {
         isActive && setShow(true)
+        isActive && setIcon(shortcutAppIcon)
         setIn(isActive)
     }, [isActive])
 
@@ -52,12 +54,14 @@ const RenderShortcutAppIcon = ({ dockPosition }: OSProps) => {
                 cursor="pointer"
             >
                 <IconButton
-                    corner="rounded"
+                    userSelect="none"
+                    cursor="default"
+                    corner="circle"
                     bgcolor={"color.primary.soft"}
                     color={"primary"}
                     transition={"none"}
                 >
-                    {shortcutAppIcon}
+                    {_icon}
                 </IconButton>
             </Stack>
         </Transition>

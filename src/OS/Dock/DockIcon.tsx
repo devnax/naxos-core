@@ -8,6 +8,7 @@ import List from 'naxui/List'
 import ListItem from 'naxui/ListItem'
 import WindowIcon from 'naxui-icons/round/Tab'
 import Stack from "naxui/Stack";
+import Divider from "naxui/Divider";
 
 export type DockIconProps = {
     appId: string;
@@ -17,7 +18,7 @@ export type DockIconProps = {
 const DockIcon = ({ appId, isHorizental }: DockIconProps) => {
     const app = App.get(appId) as AppProps
     const activeWindow: WindowStoreType = Window.getActiveWindow() as any
-    const active = activeWindow?.activeApp === appId
+    let active = activeWindow && activeWindow.activeIndex === activeWindow.apps.indexOf(appId)
     const Icon = app.icon
 
     return (
@@ -29,18 +30,33 @@ const DockIcon = ({ appId, isHorizental }: DockIconProps) => {
             cursor="pointer"
             onContextMenu={(e) => {
                 e.preventDefault()
-                Menu.close()
-                Menu.open(e.currentTarget as any, <List>
+                Menu.openContextMenu(e as any, <List p={.6}>
                     <ListItem
-                        startIcon={<WindowIcon />}
+                        p={.4}
+                        px={1}
+
                         onClick={() => {
                             Menu.close()
                             Window.open(appId)
                         }}
-                    >Open in new Window</ListItem>
+                    >New Window</ListItem>
                     <ListItem
-                        startIcon={<></>}
-                    >Exit</ListItem>
+                        p={.4}
+                        px={1}
+
+                        onClick={() => {
+                            Menu.close()
+                            Window.split(appId)
+                        }}
+                    >Split Window</ListItem>
+                    <Divider />
+                    <ListItem
+                        p={.4}
+                        px={1}
+                        onClick={() => {
+
+                        }}
+                    >Exit App</ListItem>
                 </List>, {
                     placement: "right-top",
                     transitionProps: {
