@@ -19,6 +19,7 @@ import useBlurCss from 'naxui/useBlurCss'
 import OSMenu from "./OSMenu"
 import ShortcutApp from "../../Handlers/ShortcutApp"
 import Transition from "naxui/Transition"
+import ContextMenu from "../../Handlers/ContextMenu"
 
 const RenderShortcutAppIcon = ({ dockPosition }: OSProps) => {
     const { icon: shortcutAppIcon }: any = ShortcutApp.getActiveApp() || {}
@@ -144,7 +145,7 @@ const Dock = (props: OSProps) => {
                     <RenderShortcutAppIcon {...props} />
 
                     {
-                        Window.getAll().length > 1 && <Badge key={Window.getAll().length} content={Window.getAll().length} >
+                        Window.getAll().length > 1 && <Badge content={Window.getAll().length} >
                             <IconButton
                                 corner="rounded"
                                 onClick={() => {
@@ -154,16 +155,12 @@ const Dock = (props: OSProps) => {
                                     }
                                 }}
                                 onContextMenu={(e) => {
-                                    e.preventDefault()
-                                    Menu.close()
-                                    Menu.open(e.currentTarget as any, <List minWidth={250}>
-                                        <ListItem
-                                            onClick={() => {
-                                                Menu.close()
-                                                Window.clear()
-                                            }}
-                                        >Close All</ListItem>
-                                    </List>, { placement: "right-top" })
+                                    ContextMenu(e, [
+                                        {
+                                            label: "Close All",
+                                            onClick: () => Window.closeAll()
+                                        }
+                                    ])
                                 }}
                                 color="paper"
                             >

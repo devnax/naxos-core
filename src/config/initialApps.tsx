@@ -7,6 +7,7 @@ import Stack from "naxui/Stack";
 import ShortcutApp from "../Handlers/ShortcutApp";
 import IconSettings from "naxui-icons/round/Settings";
 import IconPeople from "naxui-icons/round/People";
+import Setting from "../Settings";
 
 App.create({
     id: "home",
@@ -18,7 +19,7 @@ App.create({
         </Stack>
     },
     onClick: () => { },
-    icon: HomeIcon as any
+    icon: HomeIcon as any,
 })
 
 App.create({
@@ -38,11 +39,7 @@ ShortcutApp.create({
     id: "settings",
     name: "Settings",
     icon: <IconSettings /> as any,
-    render: () => {
-        return (
-            <Text variant="h1">Settings</Text>
-        )
-    }
+    render: Setting
 })
 
 
@@ -56,3 +53,6 @@ ShortcutApp.create({
         )
     }
 })
+
+
+ShortcutApp.run("settings")

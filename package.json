@@ -28,6 +28,6 @@
     "naxui-icons": "^1.0.5",
     "naxui-manager": "^1.6.5",
     "react-browser-scrollbar": "^1.1.5",
-    "state-range": "^3.1.6"
+    "state-range": "^3.1.7"
   }
 }

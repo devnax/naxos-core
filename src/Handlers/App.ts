@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
 import { Store } from 'state-range'
 import { IconButtonProps } from 'naxui/IconButton';
+import { ContextMenyType } from './ContextMenu';
 
 type AppMetaProps = {
 }
@@ -18,7 +19,8 @@ export type AppProps = {
     render?: () => ReactElement;
     onClick?: IconButtonProps['onClick'];
     shortcutKeys?: ShortcutKey[];
-    onContextMenu?: () => ReactElement;
+    contextMenu?: ContextMenyType[];
+    iconContextMenu?: ContextMenyType[];
 }
 
 class App extends Store<AppProps, AppMetaProps> {

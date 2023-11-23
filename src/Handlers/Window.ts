@@ -26,18 +26,15 @@ class Window extends Store<WindowType> {
 
     close(windowId: string) {
         const win = this.get(windowId)
-        const all = this.getAll()
-        if (win && all.length > 1) {
+        if (win) {
             this.delete({ _id: windowId })
             if (win.active) this.activeNext()
         }
     }
 
-    clear() {
-        this.getAll().forEach((w, idx) => {
-            if (idx) { // skip first window
-                this.delete({ _id: w._id })
-            }
+    closeAll() {
+        this.getAll().forEach((w) => {
+            this.delete({ _id: w._id })
         })
     }
 
@@ -97,31 +94,49 @@ class Window extends Store<WindowType> {
         }
     }
 
+    closeApp(appId: string) {
+        const win = this.getActiveWindow()
+        if (win && win.apps.includes(appId)) {
+            let apps = [...win.apps]
+            apps.splice(win.apps.indexOf(appId), 1)
+            if (!apps.length) {
+                this.close(win._id)
+            } else {
+                this.update({ apps, activeIndex: 0 }, { _id: win._id })
+            }
+        }
+    }
+
     deactiveAll() {
         this.update({ active: false }, { active: true })
     }
 
     activeNext() {
-        const win = this.getActiveWindow()
-        const currentIndex = this.getIndex({ _id: win?._id }) || 0
         const windows = this.getAll()
-        const next = windows[currentIndex + 1] || windows[0]
-        if (next) {
-            this.setActive(next._id)
-        } else {
-            this.setActiveApp(App.getAll()[0].id)
+        if (windows.length) {
+            const win = this.getActiveWindow()
+            const currentIndex = this.getIndex({ _id: win?._id }) || 0
+            const next = windows[currentIndex + 1] || windows[0]
+            if (next) {
+                this.setActive(next._id)
+            } else {
+                this.setActiveApp(App.getAll()[0].id)
+            }
         }
+
     }
 
     activePrev() {
-        const win = this.getActiveWindow()
-        const currentIndex = this.getIndex({ _id: win?._id }) || 0
         const windows = this.getAll()
-        const prev = windows[currentIndex - 1] || windows[windows.length - 1]
-        if (prev) {
-            this.setActive(prev._id)
-        } else {
-            this.setActiveApp(App.getAll()[0].id)
+        if (windows.length) {
+            const win = this.getActiveWindow()
+            const currentIndex = this.getIndex({ _id: win?._id }) || 0
+            const prev = windows[currentIndex - 1] || windows[windows.length - 1]
+            if (prev) {
+                this.setActive(prev._id)
+            } else {
+                this.setActiveApp(App.getAll()[0].id)
+            }
         }
     }
 

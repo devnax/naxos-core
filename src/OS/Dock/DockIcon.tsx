@@ -3,12 +3,8 @@ import IconButton from "naxui/IconButton";
 import App, { AppProps } from "../../Handlers/App";
 import { withStore } from "state-range";
 import Window, { WindowStoreType } from "../../Handlers/Window";
-import Menu from 'naxui/Menu'
-import List from 'naxui/List'
-import ListItem from 'naxui/ListItem'
-import WindowIcon from 'naxui-icons/round/Tab'
 import Stack from "naxui/Stack";
-import Divider from "naxui/Divider";
+import ContextMenu from "../../Handlers/ContextMenu";
 
 export type DockIconProps = {
     appId: string;
@@ -29,40 +25,22 @@ const DockIcon = ({ appId, isHorizental }: DockIconProps) => {
             justifyContent="center"
             cursor="pointer"
             onContextMenu={(e) => {
-                e.preventDefault()
-                Menu.openContextMenu(e as any, <List p={.6}>
-                    <ListItem
-                        p={.4}
-                        px={1}
-
-                        onClick={() => {
-                            Menu.close()
-                            Window.open(appId)
-                        }}
-                    >New Window</ListItem>
-                    <ListItem
-                        p={.4}
-                        px={1}
-
-                        onClick={() => {
-                            Menu.close()
-                            Window.split(appId)
-                        }}
-                    >Split Window</ListItem>
-                    <Divider />
-                    <ListItem
-                        p={.4}
-                        px={1}
-                        onClick={() => {
-
-                        }}
-                    >Exit App</ListItem>
-                </List>, {
-                    placement: "right-top",
-                    transitionProps: {
-                        duration: 100
+                ContextMenu(e, [
+                    {
+                        label: "New Window",
+                        onClick: () => Window.open(appId)
+                    },
+                    {
+                        label: "Split Window",
+                        onClick: () => Window.split(appId),
+                    },
+                    ...(app?.iconContextMenu || []),
+                    {
+                        divider: true,
+                        label: "Exit App",
+                        onClick: () => Window.closeApp(appId),
                     }
-                })
+                ])
             }}
         >
             <IconButton

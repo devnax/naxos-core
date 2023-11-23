@@ -15,6 +15,8 @@ import { isHotkey, hasActionKey } from "../hotkey";
 import Desktop from "./Desktop";
 import ShortcutApp from "../Handlers/ShortcutApp";
 import Menu from "naxui/Menu";
+import isElementWritable from "../utils/isElementWritable";
+import ContextMenu from "../Handlers/ContextMenu";
 
 export type EndIconType = {
     icon: () => ReactElement;
@@ -98,13 +100,53 @@ const OS = (props: OSProps) => {
                 onContextMenu={(e: any) => {
                     e.preventDefault()
                     Menu.close()
+                    if (isElementWritable(e.target)) {
+                        ContextMenu(e, [
+                            {
+                                label: "Copy",
+                                onClick: () => {
 
-                    if (!["INPUT", "TEXTAREA"].includes(e.target.tagName)) {
-                        let runningApp = Window.getActiveApp()
-                        if (runningApp && runningApp.onContextMenu) {
-                            // open the menu
-                            const view = runningApp.onContextMenu()
-                        }
+                                }
+                            },
+                            {
+                                label: "Cut",
+                                onClick: () => {
+
+                                }
+                            },
+                            {
+                                label: "Paste",
+                                onClick: () => {
+
+                                }
+                            },
+                            {
+                                divider: true,
+                                label: "Select All",
+                                onClick: () => {
+
+                                }
+                            },
+                            {
+                                label: "Clear",
+                                onClick: () => {
+
+                                }
+                            },
+                            {
+                                divider: true,
+                                label: "Undo",
+                                onClick: () => {
+
+                                }
+                            },
+                            {
+                                label: "Redo",
+                                onClick: () => {
+
+                                }
+                            }
+                        ])
                     }
                 }}
             >
