@@ -1,4 +1,3 @@
-import React from 'react'
 import Layer from 'naxui/Layer'
 import Menu from 'naxui/Menu'
 import AppsDrawerView from './View'

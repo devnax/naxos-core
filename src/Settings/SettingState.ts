@@ -1,10 +1,7 @@
-import { Store } from "state-range";
+import { Store, noDispatch } from "state-range";
 
-type SettingStateType = {
-    [key: string]: string | number
-}
-
-class SettingFactory extends Store<any, SettingStateType> { }
+export type DataType = Record<string, string | number>
+class SettingFactory extends Store<any, DataType> { }
 
 export class SettingState {
     factory: SettingFactory;
@@ -18,6 +15,16 @@ export class SettingState {
 
     get(key: string) {
         return this.factory.getMeta(key)
+    }
+
+    getData() {
+        return this.factory.getAllMeta()
+    }
+
+    setData(data: DataType) {
+        noDispatch(() => {
+            Object.keys(data).map(k => this.factory.setMeta(k, data[k]))
+        })
     }
 
     getAll() {

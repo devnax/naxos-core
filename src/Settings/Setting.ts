@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { Store } from "state-range";
-import SettingState from "./SettingState";
+import SettingState, { DataType } from "./SettingState";
 
 export type SettingType = {
     id: string;
@@ -18,6 +18,8 @@ type SettingTypePrivate = SettingType & {
 type SettngMetaType = {
     searchText: string;
 }
+
+
 
 class Setting extends Store<SettingTypePrivate, SettngMetaType> {
     create(props: SettingType) {
@@ -52,6 +54,23 @@ class Setting extends Store<SettingTypePrivate, SettngMetaType> {
         const item = this.findFirst({ id })
         if (item) {
             return item.state
+        }
+    }
+
+    getStates() {
+        const items = this.getAll()
+        let state: Record<string, DataType> = {}
+        for (let item of items) {
+            state[item.id] = item.state.getData()
+        }
+    }
+
+    setStates(states: Record<string, DataType>) {
+        for (let id in states) {
+            const item = this.findFirst({ id })
+            if (item) {
+                item.state.setData(states[id])
+            }
         }
     }
 }

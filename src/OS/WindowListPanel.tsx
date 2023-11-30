@@ -73,7 +73,8 @@ const Item = ({ win }) => {
                 >
                     <CloseIcon fontSize={15} userSelect="none" pointerEvents="none" />
                 </IconButton>
-                <Icon className="window-list-panel-app-icon" color={isActive ? "color.primary" : "inherit"} />
+                {/* <Icon className="window-list-panel-app-icon" color={isActive ? "color.primary" : "inherit"} /> */}
+                {icon}
             </Stack>
         </Transition>
     )

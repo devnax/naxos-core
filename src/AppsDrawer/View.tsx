@@ -28,7 +28,7 @@ const AppsDrawerView = ({ open }) => {
                     {
                         apps.map(app => {
                             return (
-                                <AppCard key={app._id} icon={app.icon} name={app.name} appId={app.id} />
+                                <AppCard key={app._id} icon={app.icon} appId={app.id} />
                             )
                         })
                     }

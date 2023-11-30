@@ -12,8 +12,6 @@ import DashboardIcon from 'naxui-icons/round/GridView'
 import System, { systemFactory } from "../../Handlers/System"
 import { withStore } from "state-range"
 import Menu from "naxui/Menu"
-import List from "naxui/List"
-import ListItem from "naxui/ListItem"
 import { PlacementTypes } from "naxui/Menu/placedMenu"
 import useBlurCss from 'naxui/useBlurCss'
 import OSMenu from "./OSMenu"

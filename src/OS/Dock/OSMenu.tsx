@@ -15,6 +15,7 @@ import LogoutIcon from 'naxui-icons/round/Logout'
 import AppsDrawer from '../../AppsDrawer'
 import ShortcutApp from '../../Handlers/ShortcutApp'
 import Menu from 'naxui/Menu'
+import Finder from '../../Finder'
 
 
 const OSMenu = () => {
@@ -55,6 +56,10 @@ const OSMenu = () => {
             </ListItem> */}
             <ListItem
                 startIcon={<FinderIcon />}
+                onClick={() => {
+                    Menu.close()
+                    Finder.open()
+                }}
             >
                 Finder
             </ListItem>

@@ -4,7 +4,7 @@ import AppsDrawer from ".";
 import Window from "../Handlers/Window";
 
 
-const AppCard = ({ icon: Icon, name, appId }) => {
+const AppCard = ({ icon, appId }) => {
     return (
         <Stack
             width={100}
@@ -22,7 +22,7 @@ const AppCard = ({ icon: Icon, name, appId }) => {
                 Window.setActiveApp(appId)
             }}
         >
-            <Icon />
+            {icon}
         </Stack>
     )
 }

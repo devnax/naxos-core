@@ -26,7 +26,6 @@ const SettingView = () => {
                 Setting.setActive(all[0].id)
             }
         })
-
     }, [])
 
     const settings = Setting.getAllItems()
@@ -79,7 +78,7 @@ const SettingView = () => {
                         </ViewBox>
                     </GridItem>
                     <GridItem xs={12} sm={8} md={8} height="100%">
-                        <ViewBox flex={1} maxWidth={500} p={1} px={2}>
+                        <ViewBox flex={1} maxWidth={600} p={1} px={2}>
                             {activeId && <Render />}
                         </ViewBox>
                     </GridItem>

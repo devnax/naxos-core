@@ -2,6 +2,8 @@ import { ReactElement } from 'react';
 import { Store } from 'state-range'
 import { IconButtonProps } from 'naxui/IconButton';
 import { ContextMenyType } from './ContextMenu';
+import Finder from '../Finder';
+import Window from './Window';
 
 type AppMetaProps = {
 }
@@ -15,7 +17,7 @@ export type ShortcutKey = {
 export type AppProps = {
     id: string;
     name: string;
-    icon: () => ReactElement;
+    icon: ReactElement;
     render?: () => ReactElement;
     onClick?: IconButtonProps['onClick'];
     shortcutKeys?: ShortcutKey[];
@@ -28,6 +30,14 @@ class App extends Store<AppProps, AppMetaProps> {
         if (this.findFirst({ id: props.id })) {
             return
         }
+        Finder.register(props.id, {
+            title: props.name,
+            subtitle: "Application",
+            icon: props.icon,
+            onClick: () => {
+                Window.setActiveApp(props.id)
+            }
+        })
         return this.insert({
             shortcutKeys: [],
             ...props

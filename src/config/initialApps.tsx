@@ -19,7 +19,7 @@ App.create({
         </Stack>
     },
     onClick: () => { },
-    icon: HomeIcon as any,
+    icon: <HomeIcon />,
 })
 
 App.create({
@@ -31,28 +31,25 @@ App.create({
         </Stack>
     },
     onClick: () => { },
-    icon: IconSettings as any
+    icon: <IconSettings />
 })
 
 
 ShortcutApp.create({
     id: "settings",
     name: "Settings",
-    icon: <IconSettings /> as any,
-    render: Setting
+    icon: <IconSettings />,
+    render: () => <Setting />
 })
 
 
 ShortcutApp.create({
     id: "users",
     name: "Users",
-    icon: <IconPeople /> as any,
+    icon: <IconPeople />,
     render: () => {
         return (
             <Text variant="h1">Users</Text>
         )
     }
 })
-
-
-ShortcutApp.run("settings")

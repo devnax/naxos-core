@@ -15,7 +15,7 @@ const DockIcon = ({ appId, isHorizental }: DockIconProps) => {
     const app = App.get(appId) as AppProps
     const activeWindow: WindowStoreType = Window.getActiveWindow() as any
     let active = activeWindow && activeWindow.activeIndex === activeWindow.apps.indexOf(appId)
-    const Icon = app.icon
+
 
     return (
         <Stack
@@ -53,7 +53,7 @@ const DockIcon = ({ appId, isHorizental }: DockIconProps) => {
                     Window.setActiveApp(appId)
                 }}
             >
-                <Icon />
+                {app.icon}
             </IconButton>
         </Stack>
 

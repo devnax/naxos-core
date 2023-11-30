@@ -16,7 +16,7 @@ export type ShortcutKey = {
 export type ShortcutAppProps = {
     id: string;
     name: string;
-    icon: () => ReactElement;
+    icon: ReactElement;
     render: () => ReactElement;
     shortcutKeys?: ShortcutKey[];
     onContextMenu?: () => ReactElement;
