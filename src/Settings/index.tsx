@@ -34,12 +34,13 @@ const SettingView = () => {
 
     return (
         <Transition >
-            <Stack bgcolor="color.paper" height="100%">
+            <Stack bgcolor="color.paper.light" height="100%">
                 <GridContainer height="100%">
                     <GridItem bgcolor="color.paper.light" xs={12} sm={4} md={4} height="100%" flexBox flexRow justifyContent="flex-end">
                         <ViewBox
                             width={250}
                             p={1}
+                            borderRight={1}
                             header={
                                 <Stack mb={3} mt={1}>
                                     <Input

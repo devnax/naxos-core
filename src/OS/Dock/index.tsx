@@ -18,30 +18,34 @@ import OSMenu from "./OSMenu"
 import ShortcutApp from "../../Handlers/ShortcutApp"
 import Transition from "naxui/Transition"
 import ContextMenu from "../../Handlers/ContextMenu"
+import IconClose from "naxui-icons/round/Close"
 
-const RenderShortcutAppIcon = ({ dockPosition }: OSProps) => {
-    const { icon: shortcutAppIcon }: any = ShortcutApp.getActiveApp() || {}
-    const isActive = !!shortcutAppIcon
-    const [_icon, setIcon] = useState(shortcutAppIcon)
+const _RenderShortcutAppIcon = ({ dockPosition }: OSProps) => {
+    const shortcutApp: any = ShortcutApp.getActiveApp()
+    const isActive = !!shortcutApp
+    const [_icon, setIcon] = useState(shortcutApp?.icon)
     const [show, setShow] = useState(false)
+    const [hover, setHover] = useState(false)
     const [_in, setIn] = useState(false)
     let isHorizental = dockPosition === "top" || dockPosition === "bottom"
 
     useEffect(() => {
         isActive && setShow(true)
-        isActive && setIcon(shortcutAppIcon)
+        isActive && setIcon(shortcutApp.icon)
         setIn(isActive)
-    }, [isActive])
+    }, [isActive, shortcutApp])
 
     if (!show) return <></>
 
     return (
         <Transition
             in={_in}
+            duration={_in ? 400 : 300}
             type="zoom"
             onFinish={() => {
                 if (!_in) {
                     setShow(false)
+                    setHover(false)
                 }
             }}
         >
@@ -51,23 +55,49 @@ const RenderShortcutAppIcon = ({ dockPosition }: OSProps) => {
                 alignItems="center"
                 justifyContent="center"
                 cursor="pointer"
+                position="relative"
+                sx={{
+                    '& .shortcut-app-close-btn': {
+                        transition: "transform .1s",
+                        transform: "scale(0)",
+                    },
+                    '&:hover .shortcut-app-close-btn': {
+                        transform: "scale(1)",
+                    }
+                }}
             >
-                <IconButton
-                    userSelect="none"
-                    cursor="default"
-                    corner="circle"
-                    bgcolor={"color.primary.soft"}
-                    color={"primary"}
-                    transition={"none"}
+                {/* <IconButton
+                    className="shortcut-app-close-btn"
+                    color="error"
+                    size={16}
+                    position="absolute"
+                    top={0}
+                    right={4}
+                    onClick={() => {
+                        ShortcutApp.exit()
+                    }}
                 >
-                    {_icon}
+                    <IconClose fontSize={14} />
+                </IconButton> */}
+                <IconButton
+                    corner="circle"
+                    bgcolor={hover ? "color.error.soft" : "color.primary.soft"}
+                    color={hover ? "error" : "primary"}
+                    transition={"none"}
+                    onMouseEnter={() => setHover(true)}
+                    onMouseLeave={() => setHover(false)}
+                    onClick={() => {
+                        ShortcutApp.exit()
+                    }}
+                >
+                    {hover ? <IconClose /> : _icon}
                 </IconButton>
             </Stack>
         </Transition>
     )
 }
 
-
+const RenderShortcutAppIcon = withStore(_RenderShortcutAppIcon)
 
 const Dock = (props: OSProps) => {
     let { dockPosition, centerMode, dockBgcolor, logo } = props
@@ -76,7 +106,7 @@ const Dock = (props: OSProps) => {
     let activeApp = Window.getActiveApp()
     let menu_placement: PlacementTypes = "right-bottom"
     let blurCss = useBlurCss(20)
-    const { icon: shortcutAppIcon } = ShortcutApp.getActiveApp() || {}
+    const shortcutApp = ShortcutApp.getActiveApp()
 
     switch (dockPosition) {
         case "top":
@@ -123,8 +153,8 @@ const Dock = (props: OSProps) => {
                     >
                         <IconButton
                             corner="rounded"
-                            bgcolor={(!activeApp && !shortcutAppIcon) ? "color.primary.soft" : "transparent"}
-                            color={(!activeApp && !shortcutAppIcon) ? "primary" : "paper"}
+                            bgcolor={(!activeApp && !shortcutApp) ? "color.primary.soft" : "transparent"}
+                            color={(!activeApp && !shortcutApp) ? "primary" : "paper"}
                         >
                             <DashboardIcon />
                         </IconButton>
@@ -139,7 +169,6 @@ const Dock = (props: OSProps) => {
                     alignItems="center"
                     flexDirection={isHorizental ? "row" : "column"}
                 >
-
                     <RenderShortcutAppIcon {...props} />
 
                     {

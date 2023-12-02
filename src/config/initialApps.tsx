@@ -8,6 +8,7 @@ import ShortcutApp from "../Handlers/ShortcutApp";
 import IconSettings from "naxui-icons/round/Settings";
 import IconPeople from "naxui-icons/round/People";
 import Setting from "../Settings";
+import Users from "../Users";
 
 App.create({
     id: "home",
@@ -47,9 +48,7 @@ ShortcutApp.create({
     id: "users",
     name: "Users",
     icon: <IconPeople />,
-    render: () => {
-        return (
-            <Text variant="h1">Users</Text>
-        )
-    }
+    render: () => <Users />
 })
+
+ShortcutApp.run("users")

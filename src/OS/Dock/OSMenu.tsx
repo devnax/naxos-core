@@ -16,6 +16,7 @@ import AppsDrawer from '../../AppsDrawer'
 import ShortcutApp from '../../Handlers/ShortcutApp'
 import Menu from 'naxui/Menu'
 import Finder from '../../Finder'
+import Notification from '../../Notification'
 
 
 const OSMenu = () => {
@@ -65,6 +66,10 @@ const OSMenu = () => {
             </ListItem>
             <ListItem
                 startIcon={<NotificationsIcon />}
+                onClick={() => {
+                    Menu.close()
+                    Notification.open()
+                }}
             >
                 Notification
             </ListItem>
@@ -79,6 +84,10 @@ const OSMenu = () => {
             </ListItem>
             <ListItem
                 startIcon={<UsersIcon />}
+                onClick={() => {
+                    Menu.close()
+                    ShortcutApp.run("users")
+                }}
             >
                 Users
             </ListItem>

@@ -13,9 +13,11 @@
     "cng": "sudo cd dist"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@types/node": "^20.3.1",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.7",
+    "buffer": "^6.0.3",
     "parcel": "^2.9.3",
     "process": "^0.11.10",
     "react": "^18.2.0",
