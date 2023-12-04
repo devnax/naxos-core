@@ -14,16 +14,17 @@ const Desktop = () => {
     return (
         <Stack>
             <Text variant='h1'>Desktop</Text>
-            <Button onClick={() => {
-                Notification.push("as", {
-                    content: "<b>Naxrul Ahmed</b> send you a friend request",
-                    image: "https://mui.com/static/images/avatar/2.jpg",
-                    id: 1,
-                    time: "2min ago",
-                    data: {},
-                })
+            <Button
+                onClick={() => {
+                    Notification.push("as", {
+                        content: "<b>Naxrul Ahmed</b> send you a friend request",
+                        image: "https://mui.com/static/images/avatar/2.jpg",
+                        id: 1,
+                        time: "2min ago",
+                        data: {},
+                    })
 
-            }}>Notify</Button>
+                }}>Notify</Button>
         </Stack>
     )
 }

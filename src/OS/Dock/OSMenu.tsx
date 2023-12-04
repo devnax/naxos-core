@@ -25,11 +25,11 @@ const OSMenu = () => {
             width={250}
             p={1}
             sx={{
-                "& .ui-list-item": {
+                "& .$prefix-list-item": {
                     py: .7,
                     px: .6
                 },
-                '& .ui-list-item .ui-text': {
+                '& .$prefix-list-item .$prefix-text': {
                     // fontSize: "fontsize.button"
                 },
 

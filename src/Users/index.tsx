@@ -3,7 +3,6 @@ import Stack from "naxui/Stack";
 import GridContainer from "naxui/GridContainer";
 import GridItem from "naxui/GridItem";
 import List from "naxui/List";
-import ViewBox from "naxui/ViewBox";
 import ListItem from "naxui/ListItem";
 import Text from "naxui/Text";
 import Transition from "naxui/Transition";

@@ -19,6 +19,7 @@ import ShortcutApp from "../../Handlers/ShortcutApp"
 import Transition from "naxui/Transition"
 import ContextMenu from "../../Handlers/ContextMenu"
 import IconClose from "naxui-icons/round/Close"
+import { alpha } from "naxui-manager"
 
 const _RenderShortcutAppIcon = ({ dockPosition }: OSProps) => {
     const shortcutApp: any = ShortcutApp.getActiveApp()
@@ -206,7 +207,7 @@ const Dock = (props: OSProps) => {
                             Menu.close()
                             Menu.open(e.currentTarget, <OSMenu />, {
                                 placement: menu_placement,
-                                bgcolor: "transparent",
+                                bgcolor: t => alpha(t.colors.paper.light, .3),
                                 shadow: 10,
                                 transitionProps: {
                                     duration: 250
