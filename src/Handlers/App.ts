@@ -19,10 +19,16 @@ export type AppProps = {
     name: string;
     icon: ReactElement;
     render?: () => ReactElement;
-    onClick?: IconButtonProps['onClick'];
     shortcutKeys?: ShortcutKey[];
     contextMenu?: ContextMenyType[];
     iconContextMenu?: ContextMenyType[];
+
+    onRun?: () => void;
+    onClose?: () => void;
+    onActive?: () => void;
+    onDeactive?: () => void;
+
+    onVisible?: (isVisible: boolean) => void;
 }
 
 class App extends Store<AppProps, AppMetaProps> {

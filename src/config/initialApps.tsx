@@ -19,7 +19,11 @@ App.create({
             <Input />
         </Stack>
     },
-    onClick: () => { },
+    onRun: () => console.log("onRun home"),
+    onClose: () => console.log("onClose home"),
+    onActive: () => console.log("onActive home"),
+    onDeactive: () => console.log("onDeactive home"),
+    onVisible: (v) => console.log("onVisible home", v),
     icon: <HomeIcon />,
 })
 
@@ -31,7 +35,11 @@ App.create({
             <Text variant="h3">Settings</Text>
         </Stack>
     },
-    onClick: () => { },
+    onRun: () => console.log("onRun setting"),
+    onClose: () => console.log("onClose setting"),
+    onActive: () => console.log("onActive setting"),
+    onDeactive: () => console.log("onDeactive setting"),
+    onVisible: (v) => console.log("onVisible setting", v),
     icon: <IconSettings />
 })
 

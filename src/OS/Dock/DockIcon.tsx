@@ -32,7 +32,7 @@ const DockIcon = ({ appId, isHorizental }: DockIconProps) => {
                     },
                     {
                         label: "Split Window",
-                        onClick: () => Window.split(appId),
+                        onClick: () => Window.setActiveApp(appId, true),
                     },
                     ...(app?.iconContextMenu || []),
                     {
@@ -49,7 +49,6 @@ const DockIcon = ({ appId, isHorizental }: DockIconProps) => {
                 color={active ? "primary" : "paper"}
                 corner="rounded"
                 onClick={(e) => {
-                    app.onClick && app.onClick(e)
                     Window.setActiveApp(appId)
                 }}
             >
