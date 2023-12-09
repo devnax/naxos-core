@@ -17,6 +17,7 @@ import ShortcutApp from "../Handlers/ShortcutApp";
 import Menu from "naxui/Menu";
 import isElementWritable from "../utils/isElementWritable";
 import ContextMenu from "../Handlers/ContextMenu";
+import RenderNotch from "./RenderNotch";
 
 export type EndIconType = {
     icon: () => ReactElement;
@@ -28,8 +29,6 @@ export type OSProps = {
     dockPosition?: "top" | "left" | "right" | "bottom";
     centerMode?: boolean;
     dockBgcolor?: string;
-    bgImage?: string;
-    bgcolor?: string;
     logo?: ReactElement
 }
 
@@ -42,7 +41,7 @@ const OS = (props: OSProps) => {
             setHeight(window.innerHeight)
         }
     })
-    let { dockPosition, bgcolor, bgImage } = props
+    let { dockPosition } = props
 
     let hotkeyHandler = (e: any) => {
         if (!hasActionKey(e)) return
@@ -91,10 +90,13 @@ const OS = (props: OSProps) => {
     return (
         <ThemeProvider>
             <ViewBox
+                // backgroundImage="url(https://images.pexels.com/photos/1612353/pexels-photo-1612353.jpeg?cs=srgb&dl=pexels-eberhard-grossgasteiger-1612353.jpg&fm=jpg)"
+                // backgroundSize="cover"
+                // backgroundRepeat="no-repeat"
+
                 height={height}
                 width="100%"
-                bgcolor={bgcolor ? bgcolor : "color.paper.light"}
-                bgimage={bgImage}
+                bgcolor={"color.paper.light"}
                 header={<Dock {...props} dockPosition={dockPosition} />}
                 sx={{ flexDirection, overflow: "hidden" }}
                 onContextMenu={(e: any) => {
@@ -150,18 +152,23 @@ const OS = (props: OSProps) => {
                     }
                 }}
             >
-                <Stack position="relative" width="100%" height="100%">
-                    {
-                        (!activeWindow && !ShortcutRender) && <Desktop />
-                    }
-                    {
-                        !!ShortcutRender && <ShortcutRender />
-                    }
-                    {
-                        windows.map(win => (<WindowView key={win._id} windowId={win._id} />))
-                    }
-                </Stack>
-                <WindowListPanel />
+                <ViewBox
+                    height="100%"
+                    footer={<RenderNotch />}
+                >
+                    <Stack position="relative" width="100%" height="100%">
+                        {
+                            (!activeWindow && !ShortcutRender) && <Desktop />
+                        }
+                        {
+                            !!ShortcutRender && <ShortcutRender />
+                        }
+                        {
+                            windows.map(win => (<WindowView key={win._id} windowId={win._id} />))
+                        }
+                    </Stack>
+                    <WindowListPanel />
+                </ViewBox>
             </ViewBox>
         </ThemeProvider>
     )

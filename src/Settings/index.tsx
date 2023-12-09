@@ -1,24 +1,22 @@
 import React, { useMemo } from "react";
 import Stack from "naxui/Stack";
-import GridContainer from "naxui/GridContainer";
-import GridItem from "naxui/GridItem";
-import List from "naxui/List";
-import ViewBox from "naxui/ViewBox";
-import ListItem from "naxui/ListItem";
 import Input from "naxui/Input";
 import Transition from "naxui/Transition";
 import IconSearch from 'naxui-icons/round/Search';
 import { noDispatch, withStore } from "state-range";
 import Setting from "./Setting";
+import ListView from "../ListView";
 
 const Render = withStore(() => {
     const activeItem = Setting.getActive()
-    const { render, state } = activeItem as any
+    if (!activeItem) return <></>
+    const { render, state } = activeItem
     return render(state)
 })
 
 const SettingView = () => {
-
+    const settings = Setting.getAllItems()
+    let activeItem = Setting.getActive()
     useMemo(() => {
         noDispatch(() => {
             const all = Setting.getAll()
@@ -28,63 +26,46 @@ const SettingView = () => {
         })
     }, [])
 
-    const settings = Setting.getAllItems()
-    const { id: activeId } = Setting.getActive() || {}
-
-
     return (
-        <Transition >
-            <Stack bgcolor="color.paper.light" height="100%">
-                <GridContainer height="100%">
-                    <GridItem bgcolor="color.paper.light" xs={12} sm={4} md={4} height="100%" flexBox flexRow justifyContent="flex-end">
-                        <ViewBox
-                            width={250}
-                            p={1}
-                            borderRight={1}
-                            header={
-                                <Stack mb={3} mt={1}>
-                                    <Input
-                                        p={.8}
-                                        placeholder="Search"
-                                        fontSize="fontsize.button"
-                                        startIcon={<IconSearch />}
-                                        containerProps={{
-                                            radius: .6
-                                        }}
-                                        value={Setting.getMeta("searchText")}
-                                        onChange={(e: any) => {
-                                            Setting.setMeta("searchText", e.target.value)
-                                        }}
-                                    />
-                                </Stack>
-                            }
-                        >
-                            <List>
-                                {
-                                    settings.map(s => {
-                                        return (
-                                            <ListItem
-                                                key={s.id}
-                                                p={.6}
-                                                selected={activeId === s.id}
-                                                startIcon={s.icon}
-                                                onClick={() => Setting.setActive(s.id)}
-                                                transition={0}
-
-                                            >{s.label}</ListItem>
-                                        )
-                                    })
-                                }
-                            </List>
-                        </ViewBox>
-                    </GridItem>
-                    <GridItem xs={12} sm={8} md={8} height="100%">
-                        <ViewBox flex={1} maxWidth={600} p={1} px={2}>
-                            {activeId && <Render />}
-                        </ViewBox>
-                    </GridItem>
-                </GridContainer>
-            </Stack>
+        <Transition>
+            <ListView
+                value={activeItem?.id}
+                onChange={(val) => Setting.setActive(val)}
+                centerMode
+                sidebarSize={250}
+                list={settings.map(s => ({
+                    label: s.label,
+                    value: s.id,
+                    startIcon: s.icon,
+                    render: () => <Render />,
+                }))}
+                listItemProps={{
+                    p: .6
+                }}
+                contentProps={{
+                    p: 2,
+                    maxWidth: {
+                        lg: 600
+                    }
+                }}
+                sidebarProps={{
+                    header: <Stack mb={3} mt={1}>
+                        <Input
+                            p={.8}
+                            placeholder="Search"
+                            fontSize="fontsize.button"
+                            startIcon={<IconSearch />}
+                            containerProps={{
+                                radius: .6
+                            }}
+                            value={Setting.getMeta("searchText")}
+                            onChange={(e: any) => {
+                                Setting.setMeta("searchText", e.target.value)
+                            }}
+                        />
+                    </Stack>
+                }}
+            />
         </Transition>
     )
 }

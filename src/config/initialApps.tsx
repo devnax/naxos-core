@@ -9,6 +9,11 @@ import IconSettings from "naxui-icons/round/Settings";
 import IconPeople from "naxui-icons/round/People";
 import Setting from "../Settings";
 import Users from "../Users";
+import Notch from "../Handlers/Notch";
+import Avatar from "naxui/Avatar";
+import IconButton from "naxui/IconButton";
+import IconCall from "naxui-icons/round/Call";
+
 
 App.create({
     id: "home",
@@ -60,3 +65,30 @@ ShortcutApp.create({
 })
 
 ShortcutApp.run("users")
+
+// Notch.push("demo", () => {
+//     return (
+//         <Stack
+//             direction="row"
+//             gap={8}
+//             height="100%"
+//             alignItems="center"
+//             px={2}
+//         >
+//             <Avatar src="https://mui.com/static/images/avatar/2.jpg" />
+//             <Stack flex={1}>
+//                 <Text variant="text" lineHeight={1.2} fontWeight={500}>Naxrul Ahmed</Text>
+//                 <Text variant="subtext" lineHeight={1.2}>Admin</Text>
+//             </Stack>
+//             <Stack flexRow gap={8}>
+//                 <IconButton variant="filled" color="error">
+//                     <IconCall />
+//                 </IconButton>
+//                 <IconButton variant="filled" color="success">
+//                     <IconCall />
+//                 </IconButton>
+//             </Stack>
+//         </Stack>
+//     )
+// })
+
