@@ -64,7 +64,7 @@ ShortcutApp.create({
     render: () => <Users />
 })
 
-ShortcutApp.run("users")
+// ShortcutApp.run("users")
 
 // Notch.push("demo", () => {
 //     return (

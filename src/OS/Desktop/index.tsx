@@ -4,28 +4,17 @@ import Text from 'naxui/Text'
 import React from 'react'
 import Notification from '../../Notification'
 import ListView from '../../ListView'
-
-Notification.register("as", () => {
-    return {
-
-    }
-})
+import Share from '../../Share'
 
 const Desktop = () => {
     return (
         <Stack height="100%">
-            {/* <Text variant='h1'>Desktop</Text>
+            <Text variant='h1'>Desktop</Text>
             <Button
                 onClick={() => {
-                    Notification.push("as", {
-                        content: "<b>Naxrul Ahmed</b> send you a friend request",
-                        image: "https://mui.com/static/images/avatar/2.jpg",
-                        id: 1,
-                        time: "2min ago",
-                        data: {},
-                    })
+                    Share.open()
 
-                }}>Notify</Button> */}
+                }}>Notify</Button>
 
             <ListView
                 title="Users"
